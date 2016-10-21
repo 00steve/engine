@@ -86,7 +86,8 @@ EngineControl* AssetLibrary::LoadEngineControl(Node* loader,VarMap settings){
 	ec->GlobalsRef(loader->GlobalsRef());
 	ec->GlobalRequestsRef(loader->GlobalRequestsRef());
 	ec->AssetLibraryRef(loader->AssetLibraryRef());
-	cout << " - loaded engine control asset library ref " << loader->AssetLibraryRef() << " from " << &ec->Assets() << endl;
+	//cout << " - loaded engine control asset library ref " << loader->AssetLibraryRef() << " from " << &ec->Assets() << endl;
+	cout << " - loaded engine control [" << type << "] with ref : " << loader->AssetLibraryRef() << endl;
 	ec->Settings(settings);
 	return ec;
 }

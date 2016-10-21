@@ -2,11 +2,11 @@
 #define ENGINE_NODE_H
 
 #include <iostream>
-#include "nodemessage.h"
-#include "list.h"
-#include "map.h"
-#include "varmap.h"
-#include "noderequest.h"
+#include <engine/core/nodemessage.h>
+#include <engine/core/list.h>
+#include <engine/core/map.h>
+#include <engine/core/varmap.h>
+#include <engine/core/noderequest.h>
 //#include "../assetlibrary/assetlibrary.h"
 
 using namespace std;
@@ -194,7 +194,9 @@ protected:
 	internal lists.*/
 	virtual void OnUnlink(Node* otherNode);
 
-
+    /**\brief By default this function does nothing. It can be overwritten to do things
+    specific to the implementation. It is called at the end of the SetSettings() function.
+    */
     virtual void OnSetSettings();
 
 

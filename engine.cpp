@@ -19,9 +19,11 @@ Engine::~Engine(){
 	cout << "Kill engine\n";
 }
 
+/**\brief Initializes the engine and loads anything that is defined in the default.est
+configuration file. It loads all of that stuff right away so it is available to anything
+that wants to reference it.*/
 bool Engine::Init(){
     //load asset library
-    cout << "load shit\n";
 
 	//load default settings
 	VarMap settings = Assets().LoadSettings(this,"default.est");
@@ -29,7 +31,6 @@ bool Engine::Init(){
 
     if(settings.IsSet("engine-control.type")){
 		EngineControl* ec = Assets().LoadEngineControl(this,settings.GetGroup("engine-control"));
-		//EngineControl* ec = Assets().LoadCustom<EngineControl>(this,"engine-control",settings.GetGroup("engine-control"));
 		engineControlStack.Push(ec);
 		Node::RegisterGlobal((Node*)ec,"engine-control");
     }
@@ -42,7 +43,6 @@ bool Engine::Init(){
             VarMap windowSettings = windowsSettings.GetGroup(windowNames[i]);
             Window* window = new Window(windowSettings);
             if(window->Handle()){
-                cout << "built window, bitch!\n";
                 windows.Push(window);
             } else {
                 cout << "Couldn't create the window: " << windowNames[i] << "\n";
@@ -61,14 +61,8 @@ bool Engine::Init(){
     //    return false;
     //}
 
-
-
-
-
-
-
     //load any cameras
-    /*
+
     VarMap cameras = settings.GetGroup("cameras");
     List<string> cameraNames = cameras.GroupNames();
     for(int i=0;i<cameraNames.GetCount();i++){
@@ -82,7 +76,7 @@ bool Engine::Init(){
     for(int i=0;i<viewNames.GetCount();i++){
         Assets().LoadView(this,views.GetGroup(viewNames[i]+""));
     }
-    */
+
 /*
 	//try to load any misc. objects that have a name and a type and in the
 	//  custom {
@@ -101,10 +95,7 @@ bool Engine::Init(){
 
       //  cout << "Engine::AssetLibrary id = " << &Assets() << endl;
 
-
-
     Node::RegisterGlobal((Node*)this,"engine");
-
 	return true;
 }
 
@@ -112,13 +103,11 @@ void Engine::Run(){
     //if(!horde3dInitialized) return;
 	while(windows.GetCount()){
 
-        //if(engineControlStack.GetCount()){
-        //    engineControlStack.Last()->Update();
-        //}
+        if(engineControlStack.GetCount()){
+            engineControlStack.Last()->Update();
+        }
 
-        //glfwMakeContextCurrent(windows[0]->Handle());
-
-            glfwPollEvents();
+        glfwPollEvents();
             //t += .4;
             // Set camera parameters
             //h3dSetNodeTransform( _cam, 0, 10, 0, -34 ,t, 0, 1, 1, 1 );
@@ -150,27 +139,6 @@ void Engine::Run(){
                 delete window;
             }
         }
-
-
-
-
-
-
-
-        //glfwSwapBuffers(windows[0]->Handle());
-
-        /*
-        for(int i=0;i<windows.GetCount();i++){
-            Window* window = windows[i];
-            window->Update();
-            window->Draw();
-            if(window->ShouldClose()){
-                cout << "closed window\n";
-                windows.Cut(i);
-                delete window;
-            }
-        }*/
-
 
 	}
 
