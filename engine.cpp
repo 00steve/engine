@@ -1,7 +1,6 @@
 
 
 #include "engine.h"
-#include "assetlibrary/assetlibrary.h"
 
 Engine::Engine()
     //horde3dInitialized(false),
@@ -29,26 +28,26 @@ bool Engine::Init(){
 	settings = settings.GetGroup("default");
 
     if(settings.IsSet("engine-control.type")){
-		//EngineControl* ec = Assets().LoadEngineControl(this,settings.GetGroup("engine-control"));
-		EngineControl* ec = Assets().Load<EngineControl*>(this,settings.GetGroup("engine-control"));
+		EngineControl* ec = Assets().LoadEngineControl(this,settings.GetGroup("engine-control"));
+		//EngineControl* ec = Assets().LoadCustom<EngineControl>(this,"engine-control",settings.GetGroup("engine-control"));
 		engineControlStack.Push(ec);
 		Node::RegisterGlobal((Node*)ec,"engine-control");
     }
 
     //load any windows
-    //VarMap windowsSettings =settings.GetGroup("windows");
-    //if(windowsSettings.GetCount()){
-    //    List<string> windowNames = windowsSettings.GroupNames();
-    //    for(int i=0;i<windowNames.GetCount();i++){
-    //        VarMap windowSettings = windowsSettings.GetGroup(windowNames[i]);
-    //        Window* window = new Window(windowSettings);
-    //        if(window->Handle()){
-    //            windows.Push(window);
-    //        } else {
-    //            cout << "Couldn't create the window: " << windowNames[i] << "\n";
-    //        }
-    //    }
-    //}
+    VarMap windowsSettings =settings.GetGroup("windows");
+    if(windowsSettings.GetCount()){
+        List<string> windowNames = windowsSettings.GroupNames();
+        for(int i=0;i<windowNames.GetCount();i++){
+            VarMap windowSettings = windowsSettings.GetGroup(windowNames[i]);
+            Window* window = new Window(windowSettings);
+            if(window->Handle()){
+                windows.Push(window);
+            } else {
+                cout << "Couldn't create the window: " << windowNames[i] << "\n";
+            }
+        }
+    }
 
     //if(windows.GetCount() == 0){
     //    cout << "engine can't continue initialization without a window\n";

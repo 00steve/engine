@@ -65,7 +65,7 @@ Node* AssetLibrary::LoadCustom(Node* loader,string settingsName,VarMap settings)
 
 
 
-/*
+
 EngineControl* AssetLibrary::LoadEngineControl(Node* loader,VarMap settings){
 	string type = settings.get<string>("type");
 	string fileName = rootDirectory + "extensions/engine.control." + type + ".dll";
@@ -114,5 +114,4 @@ Camera* AssetLibrary::LoadCamera(Node* loader,VarMap settings){
 }
 
 
-*/
 

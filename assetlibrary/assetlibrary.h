@@ -2,14 +2,14 @@
 #define ASSET_LIBRARY_H
 #include "../core/varmap.h"
 #include <string>
-#include "../core/stringutil.h"
-#include "../core/map.h"
-#include "dll.h"
+#include <engine/core/stringutil.h>
+#include <engine/core/map.h>
+#include <engine/assetlibrary/dll.h>
 
-//#include "../core/enginecontrol.h"
-//#include "../graphics/view.h"
-//#include "../graphics/camera.h"
-#include "../core/node.h"
+#include <engine/core/enginecontrol.h>
+#include <engine/graphics/view.h>
+#include <engine/graphics/camera.h>
+#include <engine/core/node.h>
 
 
 class AssetLibrary{
@@ -34,9 +34,9 @@ public:
 
     Node*               LoadCustom(Node* loader,string settingsName,VarMap settings);
 
-	//EngineControl*      LoadEngineControl(Node* loader,VarMap settings);
-    //View*               LoadView(Node* loader,VarMap settings);
-    //Camera*             LoadCamera(Node* loader,VarMap settings);
+	EngineControl*      LoadEngineControl(Node* loader,VarMap settings);
+    View*               LoadView(Node* loader,VarMap settings);
+    Camera*             LoadCamera(Node* loader,VarMap settings);
     //H3DRes              LoadH3DRes(Node* loader,string);
 
 };

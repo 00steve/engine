@@ -6,21 +6,20 @@
 
 #include <GLFW/glfw3.h>
 
-#include "core/node.h"
-#include "core/list.h"
-#include "core/double3.h"
-
-
-//#include "core/enginecontrol.h"
-//#include "graphics/window.h"
+#include <engine/core/node.h>
+#include <engine/core/list.h>
+#include <engine/core/double3.h>
+#include <engine/core/enginecontrol.h>
+#include <engine/graphics/window.h>
+#include <engine/assetlibrary/assetlibrary.h>
 
 //#include "physics/physical_single_body.h"
 
 class Engine : public Node{
 private:
 
-	//List<EngineControl*> engineControlStack;
-	//List<Window*> windows;
+	List<EngineControl*> engineControlStack;
+	List<Window*> windows;
 	//bool horde3dInitialized;
 
 	//H3DNode model;
