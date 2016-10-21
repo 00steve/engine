@@ -2,7 +2,7 @@
 
 AssetLibrary::AssetLibrary(){
 
-    rootDirectory = "engine/assets/";
+    rootDirectory = "assets/";
     loadedFiles = map<void*>();
 }
 

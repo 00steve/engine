@@ -21,7 +21,7 @@ Engine::~Engine(){
 
 bool Engine::Init(){
     //load asset library
-
+    cout << "load shit\n";
 
 	//load default settings
 	VarMap settings = Assets().LoadSettings(this,"default.est");
@@ -42,6 +42,7 @@ bool Engine::Init(){
             VarMap windowSettings = windowsSettings.GetGroup(windowNames[i]);
             Window* window = new Window(windowSettings);
             if(window->Handle()){
+                cout << "built window, bitch!\n";
                 windows.Push(window);
             } else {
                 cout << "Couldn't create the window: " << windowNames[i] << "\n";
@@ -49,10 +50,10 @@ bool Engine::Init(){
         }
     }
 
-    //if(windows.GetCount() == 0){
-    //    cout << "engine can't continue initialization without a window\n";
-    //    return false;
-    //}
+    if(windows.GetCount() == 0){
+        cout << "engine can't continue initialization without a window\n";
+        return false;
+    }
     //horde3dInitialized = h3dInit();
 
     //if(!horde3dInitialized){
@@ -102,14 +103,14 @@ bool Engine::Init(){
 
 
 
-    //Node::RegisterGlobal((Node*)this,"engine");
+    Node::RegisterGlobal((Node*)this,"engine");
 
 	return true;
 }
 
 void Engine::Run(){
     //if(!horde3dInitialized) return;
-	//while(windows.GetCount()){
+	while(windows.GetCount()){
 
         //if(engineControlStack.GetCount()){
         //    engineControlStack.Last()->Update();
@@ -138,7 +139,7 @@ void Engine::Run(){
             //h3dRender( _cam );
 
 
-        /*
+
         for(int i=0;i<windows.GetCount();i++){
             Window* window = windows[i];
             window->Update();
@@ -148,7 +149,7 @@ void Engine::Run(){
                 windows.Cut(i);
                 delete window;
             }
-        }*/
+        }
 
 
 
@@ -171,6 +172,6 @@ void Engine::Run(){
         }*/
 
 
-	//}
+	}
 
 }
