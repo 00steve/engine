@@ -201,7 +201,7 @@ bool Node::CreateAndSendMessage(Node* receiver, int code, void* data){
 }
 
 
-void Node::RecieveMessage(NodeMessage message){
+void Node::ReceiveMessage(NodeMessage message){
     messageQueue.Push(message);
 }
 
@@ -221,7 +221,7 @@ void Node::HandleMessages(){
 bool Node::Message(NodeMessage message){
 	if(!message.receiver) return false;
 	message.sender = this;
-	message.receiver->RecieveMessage(message);
+	message.receiver->ReceiveMessage(message);
 	return true;
 
 }
@@ -309,7 +309,7 @@ AssetLibrary* Node::AssetLibraryRef(){
     return &assetLibrary;
 }
 void Node::AssetLibraryRef(AssetLibrary* assetLibrary){
-    cout << "Store static asset library ref : " << assetLibrary << endl;
+    //cout << " - store static asset library ref : " << assetLibrary << endl;
     dllAssetLibrary = assetLibrary;
 }
 AssetLibrary &Node::Assets(){

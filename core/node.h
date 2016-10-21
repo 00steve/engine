@@ -143,9 +143,15 @@ protected:
 
     bool CreateAndSendMessage(Node* receiver, int code, void* data);
 
+    /**\brief Send a NodeMessage to another Node.
+
+    This class takes the NodeMessage class as an argument. That argument
+    should already have the property .receiver set. This is basically a
+    helper function fill in some of the NodeMessage properties, then send
+    the message to the receiver. */
 	bool Message(NodeMessage message);
 
-	void RecieveMessage(NodeMessage message);
+	void ReceiveMessage(NodeMessage message);
 
 	void HandleMessages();
 
@@ -234,8 +240,29 @@ public:
     static List<NodeRequest>* GlobalRequestsRef();
     void GlobalRequestsRef(List<NodeRequest>* globalRequests);
 
+    /**\brief Gets a reference to the asset library.
+
+    This is needed by any .dlls that have a different memory space
+    that are loaded by this node. Its asset library reference is
+    passed to the newly loaded object so it is looking at the same
+    asset library as everything else.*/
     AssetLibrary* AssetLibraryRef();
+
+    /**\brief Sets the reference to the asset library.
+
+    This is used by the asset library to copy the pointer to itself
+    from the node that has loaded this node from a .dll. The asset
+    library, with a reference to the node that is loading this node,
+    and a reference to this node, calls dllNode->AssetLibraryRef(creatorNode->AssetLibraryRef());
+    to store things.*/
     void AssetLibraryRef(AssetLibrary* assetLibrary);
+
+    /**\brief Allows access to the static Asset() class that is included
+    in every node.
+
+    This just allows things outside of the class to access the private
+    member of the Node() class. Yeah, it's probably dangerous, just don't
+    do anything stupid, guy.*/
     AssetLibrary& Assets();
 
     /**\brief Return the list of children pointers*/
