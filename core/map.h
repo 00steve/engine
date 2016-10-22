@@ -371,7 +371,7 @@ public:
 
 	void print(){
 		if(root){
-			printNode(root);
+ 			printNode(root);
 		}
 		else {
 			cout << "[Map is Empty]\n";

@@ -1,7 +1,14 @@
 #include "double2.h"
 
-double2::double2(){x=0;y=0;}
-double2::double2(double newX,double newY){x=newX;y=newY;}
+double2::double2():
+    x(0),
+    y(0){
+}
+double2::double2(double newX,double newY):
+    x(newX),
+    y(newY)
+    {
+}
 
 double2 double2::normalize() {
     double length = sqrt(x*x + y*y);
