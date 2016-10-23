@@ -41,7 +41,7 @@ private:
 	The timer is updated by the engine and set in a static variables for
 	all of the other nodes to use. It is updated once every loop in the
 	Run() function.*/
-    //Timer timer;
+    Timer timer;
 public:
 
     Engine();

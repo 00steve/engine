@@ -1,20 +1,14 @@
 #include "node.h"
-#include "../assetlibrary/assetlibrary.h"
+#include <engine/assetlibrary/assetlibrary.h>
 
 
 
 /*Generate static node variables.*/
 long Node::nextId = 0;
 List<long> Node::recyledIds = List<long>();
-
 map<Node*> Node::globals = map<Node*>();
-
 List<NodeRequest> Node::globalRequests = List<NodeRequest>();
-
 AssetLibrary Node::assetLibrary;
-
-Timer Node::timer = Timer();
-double Node::stepTime = 0;
 
 
 
@@ -86,8 +80,10 @@ void Node::OnGlobalRequest(Node* globalNodeRef,string name){
 
 
 bool Node::GlobalRequest(string name){
+    cout << " - request resource " << name << endl;
     Node* request = Global(name);
     if(request){
+        cout << "   > already loaded, being returned\n";
         OnGlobalRequest(request,name);
         return true;
     }
@@ -148,24 +144,12 @@ Node* Node::Parent(){
 
 void Node::CopyGlobalRefsTo(Node* node){
 	if(!node) return;
-	if(dllGlobalRequests){
-		node->dllGlobalRequests = dllGlobalRequests;
-	}
-	if(dllGlobals){
-		node->dllGlobals = dllGlobals;
-	}
-	if(dllAssetLibrary){
-        node->dllAssetLibrary = dllAssetLibrary;
-	}
+    node->dllGlobals = dllGlobals;
+    node->dllGlobalRequests = dllGlobalRequests;
+    node->dllAssetLibrary = dllAssetLibrary;
+	node->timeStep = timeStep;
+	//cout << "timeStep*  = " << timeStep << endl;
 }
-
-
-void Node::UpdateTimer(){
-    timer.Update();
-    stepTime = timer.TimeStep();
-    cout << "step time : " << stepTime << endl;
-}
-
 
 bool Node::Unlink(Node* otherNode){
 	if(references.Remove(otherNode) && otherNode->references.Remove(this)){
@@ -272,6 +256,7 @@ map<Node*> &Node::Globals(){
 
 
 bool Node::RegisterGlobal(Node* globalNode,string name){
+    cout << " - [register global] " << name << endl;
     if(Globals().isSet(name)){
         Globals()[name] = globalNode;
     } else {
@@ -333,4 +318,15 @@ List<Node*> Node::Children(){
     return children;
 }
 
-double Node::StepTime(){ return stepTime; }
+
+double Node::TimeStep(){
+    return timeStep ? *timeStep : 0;
+}
+
+double* Node::TimeStepRef(double* timeStepReference){
+    return timeStep = timeStepReference;
+}
+
+double* Node::TimeStepRef(){
+    return timeStep;
+}

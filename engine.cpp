@@ -1,20 +1,11 @@
-
-
 #include "engine.h"
 
 Engine::Engine()
-    //horde3dInitialized(false),
-    //model(0),
-    //_cam(0),
-    //t(0)
     {
 	glfwInit();
 }
 
 Engine::~Engine(){
-	//if(horde3dInitialized){
-    //    h3dRelease();
-	//}
 	glfwTerminate();
 	cout << "Kill engine\n";
 }
@@ -23,6 +14,9 @@ Engine::~Engine(){
 configuration file. It loads all of that stuff right away so it is available to anything
 that wants to reference it.*/
 bool Engine::Init(){
+    //set this node's time step reference
+    TimeStepRef(timer.TimeStepRef());
+    cout << "Engien::TimeStep = " << TimeStepRef() << endl;
     //load asset library
 
 	//load default settings
@@ -60,7 +54,7 @@ bool Engine::Init(){
     for(int i=0;i<cameraNames.GetCount();i++){
         Assets().LoadCamera(this,cameras.GetGroup(cameraNames[i]+""));
     }
-
+    cout << "loaded camera(s)\n";
 
 	//load any views
     VarMap views = settings.GetGroup("views");
@@ -68,7 +62,7 @@ bool Engine::Init(){
     for(int i=0;i<viewNames.GetCount();i++){
         Assets().LoadView(this,views.GetGroup(viewNames[i]+""));
     }
-    cout << "loaded view\n";
+    cout << "loaded view(s)\n";
 /*
 	//try to load any misc. objects that have a name and a type and in the
 	//  custom {
@@ -85,7 +79,6 @@ bool Engine::Init(){
 	}
     */
 
-    //Node::TimeStep(timer.TimeStepRef());
 
 
     Node::RegisterGlobal((Node*)this,"engine");
@@ -95,7 +88,7 @@ bool Engine::Init(){
 void Engine::Run(){
     cout << "made it to run\n";
 	while(windows.GetCount()){
-        //timer.Update();
+        timer.Update();
         glfwPollEvents();
 
         if(engineControlStack.GetCount()){

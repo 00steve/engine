@@ -44,14 +44,13 @@ T AssetLibrary::Load(Node* loader,string fileName,VarMap settings){
     }
     string funcName = string("Build");
 	T object = GetDllValue<T>(dll,funcName.c_str());
-	object->GlobalsRef(Node::GlobalsRef());
 	//pass along the global references from the parent
+	object->GlobalsRef(Node::GlobalsRef());
 	object->GlobalRequestsRef(loader->GlobalRequestsRef());
 	object->AssetLibraryRef(loader->AssetLibraryRef());
-	//cout << " - static node asset library : " << loader->AssetLibraryRef() << endl;
-	//settings.Print();
-	//cout << "ON LOAD set settings of node\n";
-	object->Settings(settings);
+	object->TimeStepRef(loader->TimeStepRef());
+    //loader->CopyGlobalRefsTo(object);
+    object->Settings(settings);
 	return object;
 }
 
@@ -86,6 +85,8 @@ EngineControl* AssetLibrary::LoadEngineControl(Node* loader,VarMap settings){
 	ec->GlobalsRef(loader->GlobalsRef());
 	ec->GlobalRequestsRef(loader->GlobalRequestsRef());
 	ec->AssetLibraryRef(loader->AssetLibraryRef());
+	ec->TimeStepRef(loader->TimeStepRef());
+	//loader->CopyGlobalRefsTo((Node*)ec);
 	//cout << " - loaded engine control asset library ref " << loader->AssetLibraryRef() << " from " << &ec->Assets() << endl;
 	//cout << " - loaded engine control [" << type << "] with ref : " << loader->AssetLibraryRef() << endl;
 	ec->Settings(settings);

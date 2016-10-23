@@ -118,15 +118,13 @@ private:
 
     A tick is the number of milliseconds that pass between each iteration of the
     game loop.*/
-	static double stepTime;
 
 
 	/**\brief Keep track of the global time.
 
 	The timer is a static class used to give the Node class reference to when
     the time is.*/
-    static Timer timer;
-
+    double* timeStep;
 protected:
 
     /**\brief Lets any node request a reference to any other node by name.
@@ -215,10 +213,8 @@ protected:
     virtual void OnSetSettings();
 
 
-	void CopyGlobalRefsTo(Node* node);
 
 
-    static void UpdateTimer();
 public:
 
     Node();
@@ -283,7 +279,13 @@ public:
 
     Specifically, this is the time between the start of the current game loop
     and the start of the previous game loop.*/
-    double StepTime();
+    double TimeStep();
+
+    double* TimeStepRef(double* timeStepReference);
+    double* TimeStepRef();
+
+
+	void CopyGlobalRefsTo(Node* node);
 };
 
 

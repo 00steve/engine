@@ -3,6 +3,7 @@
 
 Timer::Timer(){
     rtime = ctime = otime = glfwGetTime();
+    tslu = 0;
 }
 
 
