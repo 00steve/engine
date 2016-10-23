@@ -6,11 +6,15 @@
 /*Generate static node variables.*/
 long Node::nextId = 0;
 List<long> Node::recyledIds = List<long>();
+
 map<Node*> Node::globals = map<Node*>();
+
 List<NodeRequest> Node::globalRequests = List<NodeRequest>();
+
 AssetLibrary Node::assetLibrary;
 
-
+Timer Node::timer = Timer();
+double Node::stepTime = 0;
 
 
 
@@ -153,6 +157,13 @@ void Node::CopyGlobalRefsTo(Node* node){
 	if(dllAssetLibrary){
         node->dllAssetLibrary = dllAssetLibrary;
 	}
+}
+
+
+void Node::UpdateTimer(){
+    timer.Update();
+    stepTime = timer.TimeStep();
+    cout << "step time : " << stepTime << endl;
 }
 
 
@@ -321,3 +332,5 @@ AssetLibrary &Node::Assets(){
 List<Node*> Node::Children(){
     return children;
 }
+
+double Node::StepTime(){ return stepTime; }

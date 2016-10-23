@@ -1,5 +1,7 @@
 #ifndef ENGINE_VIEW_H
 #define ENGINE_VIEW_H
+
+#include <GLFW/glfw3.h>
 #include <engine/core/node.h>
 #include <engine/core/int2.h>
 #include <engine/core/double2.h>

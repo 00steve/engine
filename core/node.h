@@ -7,6 +7,7 @@
 #include <engine/core/map.h>
 #include <engine/core/varmap.h>
 #include <engine/core/noderequest.h>
+#include <engine/core/timer.h>
 //#include "../assetlibrary/assetlibrary.h"
 
 using namespace std;
@@ -33,10 +34,8 @@ variable is added.
 */
 
 
-
 class Node{
 private:
-
     /**\brief List of nodes that should be accessible by any other node.
 
     They are added to this list using the RegisterGlobal(Node*) function. Only very
@@ -115,8 +114,18 @@ private:
 	it will only be called from the node base class when a new global is registered.*/
     List<NodeRequest> &GlobalRequests();
 
+    /**\brief Get the percentage of a second since the last tick.
+
+    A tick is the number of milliseconds that pass between each iteration of the
+    game loop.*/
+	static double stepTime;
 
 
+	/**\brief Keep track of the global time.
+
+	The timer is a static class used to give the Node class reference to when
+    the time is.*/
+    static Timer timer;
 
 protected:
 
@@ -208,6 +217,8 @@ protected:
 
 	void CopyGlobalRefsTo(Node* node);
 
+
+    static void UpdateTimer();
 public:
 
     Node();
@@ -268,6 +279,11 @@ public:
     /**\brief Return the list of children pointers*/
     List<Node*> Children();
 
+    /**\brief The time that has occurred since the last step.
+
+    Specifically, this is the time between the start of the current game loop
+    and the start of the previous game loop.*/
+    double StepTime();
 };
 
 

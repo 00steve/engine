@@ -49,20 +49,12 @@ bool Engine::Init(){
             }
         }
     }
-
     if(windows.GetCount() == 0){
         cout << "engine can't continue initialization without a window\n";
         return false;
     }
-    //horde3dInitialized = h3dInit();
-
-    //if(!horde3dInitialized){
-    //    cout << "failed to initialize horde3d\n";
-    //    return false;
-    //}
 
     //load any cameras
-
     VarMap cameras = settings.GetGroup("cameras");
     List<string> cameraNames = cameras.GroupNames();
     for(int i=0;i<cameraNames.GetCount();i++){
@@ -76,7 +68,7 @@ bool Engine::Init(){
     for(int i=0;i<viewNames.GetCount();i++){
         Assets().LoadView(this,views.GetGroup(viewNames[i]+""));
     }
-
+    cout << "loaded view\n";
 /*
 	//try to load any misc. objects that have a name and a type and in the
 	//  custom {
@@ -93,41 +85,22 @@ bool Engine::Init(){
 	}
     */
 
-      //  cout << "Engine::AssetLibrary id = " << &Assets() << endl;
+    //Node::TimeStep(timer.TimeStepRef());
+
 
     Node::RegisterGlobal((Node*)this,"engine");
 	return true;
 }
 
 void Engine::Run(){
-    //if(!horde3dInitialized) return;
+    cout << "made it to run\n";
 	while(windows.GetCount()){
+        //timer.Update();
+        glfwPollEvents();
 
         if(engineControlStack.GetCount()){
             engineControlStack.Last()->Update();
         }
-
-        glfwPollEvents();
-            //t += .4;
-            // Set camera parameters
-            //h3dSetNodeTransform( _cam, 0, 10, 0, -34 ,t, 0, 1, 1, 1 );
-
-            // Show stats
-            //h3dutShowFrameStats( _fontMatRes, _panelMatRes, _statMode );
-
-            //h3dutShowText( "Pipeline: forward", 0.03f, 0.24f, 0.026f, 1, 1, 1, _fontMatRes );
-
-
-            // Show logo
-            //const float ww = (float)h3dGetNodeParamI( _cam, H3DCamera::ViewportWidthI ) /
-            //                 (float)h3dGetNodeParamI( _cam, H3DCamera::ViewportHeightI );
-            //const float ovLogo[] = { ww-0.4f, 0.8f, 0, 1,  ww-0.4f, 1, 0, 0,  ww, 1, 1, 0,  ww, 0.8f, 1, 1 };
-            //h3dShowOverlays( ovLogo, 4, 1.f, 1.f, 1.f, 1.f, _logoMatRes, 0 );
-
-            // Render scene
-            //h3dRender( _cam );
-
-
 
         for(int i=0;i<windows.GetCount();i++){
             Window* window = windows[i];
@@ -139,7 +112,5 @@ void Engine::Run(){
                 delete window;
             }
         }
-
 	}
-
 }
