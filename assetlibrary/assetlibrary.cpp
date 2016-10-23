@@ -44,12 +44,10 @@ T AssetLibrary::Load(Node* loader,string fileName,VarMap settings){
     }
     string funcName = string("Build");
 	T object = GetDllValue<T>(dll,funcName.c_str());
-	//pass along the global references from the parent
 	object->GlobalsRef(Node::GlobalsRef());
 	object->GlobalRequestsRef(loader->GlobalRequestsRef());
 	object->AssetLibraryRef(loader->AssetLibraryRef());
 	object->TimeStepRef(loader->TimeStepRef());
-    //loader->CopyGlobalRefsTo(object);
     object->Settings(settings);
 	return object;
 }
@@ -66,6 +64,7 @@ Node* AssetLibrary::LoadCustom(Node* loader,string settingsName,VarMap settings)
 
 
 EngineControl* AssetLibrary::LoadEngineControl(Node* loader,VarMap settings){
+    /*
 	string type = settings.get<string>("type");
 	string fileName = rootDirectory + "extensions/engine.control." + type + ".dll";
 	eDLL* dll = NULL;
@@ -86,11 +85,14 @@ EngineControl* AssetLibrary::LoadEngineControl(Node* loader,VarMap settings){
 	ec->GlobalRequestsRef(loader->GlobalRequestsRef());
 	ec->AssetLibraryRef(loader->AssetLibraryRef());
 	ec->TimeStepRef(loader->TimeStepRef());
-	//loader->CopyGlobalRefsTo((Node*)ec);
-	//cout << " - loaded engine control asset library ref " << loader->AssetLibraryRef() << " from " << &ec->Assets() << endl;
-	//cout << " - loaded engine control [" << type << "] with ref : " << loader->AssetLibraryRef() << endl;
 	ec->Settings(settings);
-	return ec;
+	*/
+    if(!settings.IsSet("type")){
+        cout << "invalid settings argument. No \"type\" set.\n";
+        return NULL;
+    }
+    string fileName = rootDirectory + "extensions/engine.control." + settings.get<string>("type") + ".dll";
+	return Load<EngineControl*>(loader,fileName,settings);
 }
 
 
