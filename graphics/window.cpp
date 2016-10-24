@@ -135,6 +135,7 @@ void Window::Draw(){
     glfwMakeContextCurrent(windowHandle);
 
     for(int i=0;i<views.GetCount();i++){
+        //cout << "draw view " << i << "\n";
         views[i]->Draw();
         //cout << "draw window\n";
     }

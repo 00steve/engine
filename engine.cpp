@@ -60,6 +60,7 @@ bool Engine::Init(){
     VarMap views = settings.GetGroup("views");
     List<string> viewNames = views.GroupNames();
     for(int i=0;i<viewNames.GetCount();i++){
+        cout << " view name : " << viewNames[i] << endl;
         Assets().LoadView(this,views.GetGroup(viewNames[i]+""));
     }
     cout << "loaded view(s)\n";
