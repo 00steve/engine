@@ -12,8 +12,13 @@
 
 using namespace std;
 
-
+//class Node;
 class AssetLibrary;
+//class AssetLibrary{
+//    public:
+//        Node* LoadCustom(Node* loader,string settingsNames,VarMap settings);
+//};
+
 
 /**
 

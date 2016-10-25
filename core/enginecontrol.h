@@ -7,8 +7,9 @@
 using namespace std;
 
 class EngineControl : public Node{
-private:
-
+protected:
+    virtual void OnSetSettings();
+    virtual void OnGlobalRequest(Node* globalNodeRef,string name);
 
 public:
 

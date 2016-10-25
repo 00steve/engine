@@ -5,7 +5,6 @@
 #include <engine/core/stringutil.h>
 #include <engine/core/map.h>
 #include <engine/assetlibrary/dll.h>
-
 #include <engine/core/enginecontrol.h>
 #include <engine/graphics/view.h>
 #include <engine/graphics/camera.h>
