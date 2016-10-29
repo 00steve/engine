@@ -13,7 +13,7 @@ void EngineControl::OnSetSettings(){
         if(prop.IsSet("type")){
             type = prop.get<string>("type");
             cout << " - has a type " << type << endl;
-            //Child(Assets().LoadCustom(this,("prop."+type),prop));
+            //Child(Assets().LoadCustom(this,"prop",prop));
         }
     }
 }
