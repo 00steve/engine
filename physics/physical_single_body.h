@@ -22,6 +22,7 @@ protected:
 
     virtual void OnSetSettings();
 
+    virtual bool HandleMessage(NodeMessage message);
 
 public:
 
@@ -34,7 +35,6 @@ public:
 
 
 
-	bool HandleMessage(NodeMessage m);
 	virtual void Kinematic();
 	virtual void Dynamic();
 

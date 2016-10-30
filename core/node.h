@@ -8,16 +8,9 @@
 #include <engine/core/varmap.h>
 #include <engine/core/noderequest.h>
 #include <engine/core/timer.h>
-//#include "../assetlibrary/assetlibrary.h"
+#include <engine/assetlibrary/assetlibrary.h>
 
 using namespace std;
-
-//class Node;
-class AssetLibrary;
-//class AssetLibrary{
-//    public:
-//        Node* LoadCustom(Node* loader,string settingsNames,VarMap settings);
-//};
 
 
 /**
@@ -217,6 +210,9 @@ protected:
     */
     virtual void OnSetSettings();
 
+
+
+    Node* Load(string settingsName,VarMap settings);
 
 
 

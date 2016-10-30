@@ -1,8 +1,10 @@
 #ifndef PHYSICS_WORLD_H
 #define PHYSICS_WORLD_H
 
+
 #define dSINGLE
 #include <ode/ode.h>
+
 #include <engine/core/double3.h>
 #include <engine/physics/physical.h>
 #include <engine/physics/physicsgroup.h>
@@ -19,6 +21,7 @@ private:
     static void NearCallback (void *data, dGeomID o1, dGeomID o2);
 
     static void Init(){
+        cout << "Initialize physics\n";
         stepSize  = .01;
         worldID = dWorldCreate();
         spaceID = dHashSpaceCreate(0);

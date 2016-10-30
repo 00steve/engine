@@ -111,8 +111,9 @@ dSurfaceParameters* Physical::SurfaceParameters(dGeomID){
     return NULL;
 }
 
-bool Physical::HandleMessage(NodeMessage m){
-    switch(m.code){
+bool Physical::HandleMessage(NodeMessage message){
+    cout << " - physical::Handlemessage\n";
+    switch(message.code){
     case MESSAGE_SELECTED:
         selected = true;
         selectable = false;
@@ -128,7 +129,7 @@ bool Physical::HandleMessage(NodeMessage m){
     case MESSAGE_SET_ROTATION:
         return true;
     }
-    return Node::HandleMessage(m);
+    return Node::HandleMessage(message);
 }
 
 void Physical::DisableBodies(){}

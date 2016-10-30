@@ -20,11 +20,11 @@ bool Engine::Init(){
     //load asset library
 
 	//load default settings
-	VarMap settings = Assets().LoadSettings(this,"default.est");
+	VarMap settings = AssetLibrary::LoadSettings("default.est");
 	settings = settings.GetGroup("default");
 
     if(settings.IsSet("engine-control.type")){
-		EngineControl* ec = Assets().LoadEngineControl(this,settings.GetGroup("engine-control"));
+		EngineControl* ec = (EngineControl*) Load("control",settings.GetGroup("engine-control"));
 		engineControlStack.Push(ec);
 		Node::RegisterGlobal((Node*)ec,"engine-control");
     }
@@ -52,7 +52,7 @@ bool Engine::Init(){
     VarMap cameras = settings.GetGroup("cameras");
     List<string> cameraNames = cameras.GroupNames();
     for(int i=0;i<cameraNames.GetCount();i++){
-        Assets().LoadCamera(this,cameras.GetGroup(cameraNames[i]+""));
+        Load("camera",cameras.GetGroup(cameraNames[i]+""));
     }
     cout << "loaded camera(s)\n";
 
@@ -61,7 +61,7 @@ bool Engine::Init(){
     List<string> viewNames = views.GroupNames();
     for(int i=0;i<viewNames.GetCount();i++){
         cout << " view name : " << viewNames[i] << endl;
-        Assets().LoadView(this,views.GetGroup(viewNames[i]+""));
+        Load("view",views.GetGroup(viewNames[i]+""));
     }
     cout << "loaded view(s)\n";
 /*

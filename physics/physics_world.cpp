@@ -123,6 +123,8 @@ void PhysicsWorld::PhysicsSettings(VarMap settings){
     dWorldSetAutoDisableTime(worldID,.25);
 
 */
+
+
 }
 
 
@@ -151,6 +153,8 @@ void PhysicsWorld::NewBox(dBodyID &body,dGeomID &geom,double3 dimensions,double 
     geom = dCreateBox(spaceID,dimensions.x,dimensions.y,dimensions.z);
     dGeomSetBody (geom, body);
     dGeomSetData(geom,data);
+    cout << "   - completed object\n";
+
 }
 void PhysicsWorld::NewStaticPlane(dGeomID &geom,double3 direction,double offset,void* data){
     direction.normalize();
@@ -160,15 +164,18 @@ void PhysicsWorld::NewStaticPlane(dGeomID &geom,double3 direction,double offset,
 
 
 PhysicsGroup* PhysicsWorld::BuildPhysicsGroup(VarMap* groupSettings,void* data){
+        cout << "build physics group\n";
         PhysicsGroup* pGroup = new PhysicsGroup();
         List<string> groupNames = groupSettings->GroupNames();
         for(int i=0;i<groupNames.GetCount();i++){
+            cout << " - build object " << groupNames[i] << endl;
             VarMap props = groupSettings->GetGroup(groupNames[i]);
             dGeomID geom;
             dBodyID body;
             double density = 0;
             if(props.IsSet("density")){
                 density = props.get<double>("density");
+                cout << "   - density\n";
             }
             if(props.IsSet("geometry")){
                 string shape = props.get<string>("geometry");
@@ -181,6 +188,7 @@ PhysicsGroup* PhysicsWorld::BuildPhysicsGroup(VarMap* groupSettings,void* data){
                     } else {
                         dimensions = double3(1,1,1);
                     }
+                    cout << "   - build box\n";
                     NewBox(body,geom,dimensions,density,data);
                 }//end of if is a box
             }

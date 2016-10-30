@@ -1,41 +1,53 @@
 #ifndef ASSET_LIBRARY_H
 #define ASSET_LIBRARY_H
-#include "../core/varmap.h"
+
 #include <string>
+#include <engine/core/varmap.h>
 #include <engine/core/stringutil.h>
 #include <engine/core/map.h>
 #include <engine/assetlibrary/dll.h>
-#include <engine/core/enginecontrol.h>
-#include <engine/graphics/view.h>
-#include <engine/graphics/camera.h>
-#include <engine/core/node.h>
-
 
 class AssetLibrary{
 private:
 
-    string rootDirectory;
+    static string rootDirectory;
 
-	map<void*> loadedFiles;
+	static map<void*> loadedFiles;
 
-	VarMap LoadSettingsFile(Node* loader,string fileName);
+	static VarMap LoadSettingsFile(string fileName);
 
 public:
 
-    AssetLibrary();
     //static Texture* LoadTexture();
 	//static Sound* LoadSound();
 
-	VarMap              LoadSettings(Node* loader,string fileName);
+	static VarMap LoadSettings(string fileName);
 
 	template <class T>
-    T                   Load(Node* loader,string fileName,VarMap settings);
+    static T Load(string fileName,VarMap settings){
+        if(!settings.IsSet("type")) return NULL;
+        fileName = rootDirectory + fileName;
+        eDLL* dll = new eDLL(fileName.c_str());
+        if(loadedFiles.isSet(fileName)){
+            dll = (eDLL*) loadedFiles.getLastCheck();
+        } else {
+            if(!dll->IsLoaded()){
+                delete dll;
+                cout << " - couldn't load the dll for some reason\n";
+                return NULL;
+            }
+            loadedFiles.push((void*)dll,fileName);
+        }
+        string funcName = string("Build");
+        T object = GetDllValue<T>(dll,funcName.c_str());
+        return object;
+    }
 
-    Node*               LoadCustom(Node* loader,string settingsName,VarMap settings);
+    //Node*               LoadCustom(Node* loader,string settingsName,VarMap settings);
 
-	EngineControl*      LoadEngineControl(Node* loader,VarMap settings);
-    View*               LoadView(Node* loader,VarMap settings);
-    Camera*             LoadCamera(Node* loader,VarMap settings);
+	//EngineControl*      LoadEngineControl(Node* loader,VarMap settings);
+    //View*               LoadView(Node* loader,VarMap settings);
+    //Camera*             LoadCamera(Node* loader,VarMap settings);
     //H3DRes              LoadH3DRes(Node* loader,string);
 
 };

@@ -5,8 +5,6 @@
 
 #include <GLFW/glfw3.h>
 #include <engine/core/node.h>
-#include <engine/assetlibrary/assetlibrary.h>
-#include <engine/core/list.h>
 #include <engine/core/enginecontrol.h>
 #include <engine/graphics/window.h>
 

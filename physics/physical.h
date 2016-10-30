@@ -66,6 +66,7 @@ protected:
 
 	virtual void OnSetSettings();
 
+	virtual bool HandleMessage(NodeMessage message);
 public:
 
     Physical();
@@ -182,7 +183,6 @@ public:
     contact_setting for each contact part of it. */
     virtual dSurfaceParameters* SurfaceParameters(dGeomID);
 
-	bool HandleMessage(NodeMessage m);
 
 	virtual void DisableBodies();
 

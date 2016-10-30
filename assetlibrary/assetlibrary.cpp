@@ -1,22 +1,23 @@
 #include "assetlibrary.h"
 
-AssetLibrary::AssetLibrary(){
 
-    rootDirectory = "assets/";
-    loadedFiles = map<void*>();
-}
+string AssetLibrary::rootDirectory = "assets/";
 
+map<void*> AssetLibrary::loadedFiles;
 
 
-VarMap AssetLibrary::LoadSettings(Node* loader,string fileName){
+
+
+VarMap AssetLibrary::LoadSettings(string fileName){
 	if(loadedFiles.exists(fileName)) {
 		cout << "found existing load of " << fileName << endl;
 		return *((VarMap*)loadedFiles[fileName]);
 	}
-	return LoadSettingsFile(loader,fileName);
+	return LoadSettingsFile(fileName);
 }
 
-VarMap AssetLibrary::LoadSettingsFile(Node* loader,string fileName){
+
+VarMap AssetLibrary::LoadSettingsFile(string fileName){
 	fileName = rootDirectory+"settings/"+fileName;
 	cout << "load settings file " << fileName << endl;
 	VarMap newMap;
@@ -26,11 +27,12 @@ VarMap AssetLibrary::LoadSettingsFile(Node* loader,string fileName){
 	}
 	loadedFiles.push((void*)&newMap,fileName);
 	return newMap;
-
 }
-
+/*
 template <class T>
-T AssetLibrary::Load(Node* loader,string fileName,VarMap settings){
+T AssetLibrary::Load(string fileName,VarMap settings){
+	if(!settings.IsSet("type")) return NULL;
+	fileName = rootDirectory + fileName;
     eDLL* dll = new eDLL(fileName.c_str());
     if(loadedFiles.isSet(fileName)){
         dll = (eDLL*) loadedFiles.getLastCheck();
@@ -44,14 +46,10 @@ T AssetLibrary::Load(Node* loader,string fileName,VarMap settings){
     }
     string funcName = string("Build");
 	T object = GetDllValue<T>(dll,funcName.c_str());
-	object->GlobalsRef(Node::GlobalsRef());
-	object->GlobalRequestsRef(loader->GlobalRequestsRef());
-	object->AssetLibraryRef(loader->AssetLibraryRef());
-	object->TimeStepRef(loader->TimeStepRef());
-    object->Settings(settings);
 	return object;
-}
+}*/
 
+/*
 Node* AssetLibrary::LoadCustom(Node* loader,string settingsName,VarMap settings){
 	if(!settings.IsSet("type")) return NULL;
 	string fileName = rootDirectory + "extensions/engine." + settingsName
@@ -85,6 +83,6 @@ Camera* AssetLibrary::LoadCamera(Node* loader,VarMap settings){
     string fileName = rootDirectory + "extensions/engine.camera." + settings.get<string>("type") + ".dll";
     return Load<Camera*>(loader,fileName,settings);
 }
-
+*/
 
 
