@@ -26,11 +26,13 @@ public:
 	template <class T>
     static T Load(string fileName,VarMap settings){
         if(!settings.IsSet("type")) return NULL;
+        string type = settings.get<string>("type");
         fileName = rootDirectory + fileName;
-        eDLL* dll = new eDLL(fileName.c_str());
+        eDLL* dll = NULL;
         if(loadedFiles.isSet(fileName)){
             dll = (eDLL*) loadedFiles.getLastCheck();
         } else {
+            dll = new eDLL(fileName.c_str());
             if(!dll->IsLoaded()){
                 delete dll;
                 cout << " - couldn't load the dll for some reason\n";
@@ -38,10 +40,21 @@ public:
             }
             loadedFiles.push((void*)dll,fileName);
         }
-        string funcName = string("Build");
+
+        string funcName = "Build";
+        if(fileName.substr(fileName.length()-type.length()-4) != type+".dll"){
+            cout << " - loading generic dlls - " << fileName << endl;
+            funcName += stringToUpperCaseFirst(type.substr(type.find('.')+1));
+            cout << "    - func name is " << funcName << endl;
+        }
+
         T object = GetDllValue<T>(dll,funcName.c_str());
         return object;
     }
+
+
+
+
 
     //Node*               LoadCustom(Node* loader,string settingsName,VarMap settings);
 

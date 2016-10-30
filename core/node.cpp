@@ -192,27 +192,22 @@ bool Node::CreateAndSendMessage(Node* receiver, int code, void* data){
     message.receiver = receiver;
     message.data = data;
     message.code = code;
-    cout << " - send message\n";
     return Message(message);
 }
 
 
 void Node::ReceiveMessage(NodeMessage message){
-    cout << " - push message onto queue list ";
     messageQueue.Push(message);
-    cout << " -> complete\n";
 }
 
 
 bool Node::HandleMessage(NodeMessage message){
-    cout << "Node::HandleMessage = false\n";
 	return false;
 }
 
 
 void Node::HandleMessages(){
 	while(messageQueue.GetCount()){
-        cout << " - handle message\n";
 		HandleMessage(messageQueue.Pop());
 	}
 }
@@ -338,9 +333,12 @@ double* Node::TimeStepRef(){
 
 
 Node* Node::Load(string settingsName,VarMap settings){
-    string fileName = "extensions/engine." + settingsName
-		+ "." + settings.get<string>("type") + ".dll";
+    string type = settings.get<string>("type");
+    int firstP = static_cast<int>(type.find('.'));
+    bool sub = firstP != -1;
+    string fileName = "extensions/engine." + (sub ? type.substr(0,firstP) : settingsName + "." + settings.get<string>("type")) + ".dll";
     Node* newNode = AssetLibrary::Load<Node*>(fileName,settings);
+    if(!newNode) return NULL;
 	newNode->GlobalsRef(Node::GlobalsRef());
 	newNode->GlobalRequestsRef(GlobalRequestsRef());
 	newNode->AssetLibraryRef(AssetLibraryRef());

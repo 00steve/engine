@@ -112,7 +112,6 @@ dSurfaceParameters* Physical::SurfaceParameters(dGeomID){
 }
 
 bool Physical::HandleMessage(NodeMessage message){
-    cout << " - physical::Handlemessage\n";
     switch(message.code){
     case MESSAGE_SELECTED:
         selected = true;

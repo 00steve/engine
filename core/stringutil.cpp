@@ -227,3 +227,17 @@ List<double>* stringToNumberList(string value){
     }
     return values;
 }
+
+
+string stringToUpperCaseFirst(string text){
+	int i = 0;
+	int l = text.length();
+	if(i++ < l && text[0] > 96 && text[0] < 123){
+        text[0] -= 32;
+	}
+	while(i < l){
+        if(text[i-1] == ' ' && text[i] > 96 && text[i] < 123 ) text[i] -= 32;
+        ++i;
+	}
+	return text;
+}

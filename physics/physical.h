@@ -5,8 +5,8 @@ or interact with other physical objects in the ODE simulation.*/
 #ifndef PHYSICAL_H
 #define PHYSICAL_H
 
-#include "../core/node.h"
-#include "collision.h"
+#include <engine/core/node.h>
+#include <engine/physics/collision.h>
 
 #define PROJECTILE_GROUP 1
 #define EXPLOSION_GROUP 2

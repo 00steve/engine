@@ -101,3 +101,5 @@ bool stringIsNumberList(const string text);
 
 List<double>* stringToNumberList(string value);
 #endif // STRING_UTIL_H
+
+string stringToUpperCaseFirst(string text);

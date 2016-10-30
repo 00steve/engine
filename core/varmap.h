@@ -1,16 +1,16 @@
 #ifndef VAR_MAP_H
 #define VAR_MAP_H
 
-#include "map.h"
-#include "list.h"
 #include <typeinfo>
 #include <iostream>
 #include <fstream>
 #include <string>
-#include "stringutil.h"
+#include <engine/core/list.h>
+#include <engine/core/map.h>
+#include <engine/core/stringutil.h>
 
 /*the settings class stores any settings that can be configured in the engine.*/
-using namespace std;
+//using namespace std;
 
 class VarMapEntry {
 

@@ -64,7 +64,6 @@ public:
         this->size = size;
         it = 0;
         tmpIt = -1;
-        //cout << "create list\n";
     }
 
     List(int size) {
@@ -85,13 +84,11 @@ public:
 
 
     ~List() {
-		//cout << "delete list\n";
     }
 
     T Push(T item) {
         //check to see if there are still empty spaces in the list
         if(count == size) {
-            cout << "make list larger\n";
             /*if the list needs to be incremented, calculate a new size
             for the list, create a temporary pointer, copy all of the items
             from the current pointer,make the current pointer point to the
@@ -101,7 +98,6 @@ public:
             memcpy(temp,items,sizeof(T)*count);//copy info from the old list to the new one
             items = temp;//store the temp list as the new list
         }
-        cout << "item count : " << count << endl;
         //add the item to the list and increment count after the item has been added
         items[count++] = item;
         return item;

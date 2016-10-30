@@ -10,7 +10,7 @@
 #include <engine/core/timer.h>
 #include <engine/assetlibrary/assetlibrary.h>
 
-using namespace std;
+//using namespace std;
 
 
 /**
