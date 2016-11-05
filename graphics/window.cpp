@@ -27,21 +27,22 @@ Window::~Window(){
 }
 
 void Window::SetupOpenGL(){
-    glEnable(GL_SCISSOR_TEST);
-    glEnable(GL_STENCIL_TEST);
+    //glEnable(GL_SCISSOR_TEST);
+    //glEnable(GL_STENCIL_TEST);
 
-	//glEnauser-resizableble(GL_DEPTH_TEST);// Enable the depth buffer
-	//glDepthFunc(GL_GREATER);// Set our depth function to overwrite if new value less than or equal to current value
-	//glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST); // Ask for nicest perspective correction
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_ALWAYS);
+	//glDepthFunc(GL_NOTEQUAL);// Set our depth function to overwrite if new value less than or equal to current value
 	glLineWidth(2.0f);
 
     glEnable(GL_ALPHA);
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE);
-    glEnable (GL_BLEND);
-    glEnable( GL_TEXTURE_2D );
-    glFrontFace(GL_CCW);
-    glCullFace(GL_BACK);
+    //glEnable(GL_CULL_FACE);
+    //glDepthMask(GL_TRUE);
+    //glCullFace(GL_BACK);
+    //glEnable (GL_BLEND);
+    //glEnable( GL_TEXTURE_2D );
+    //glFrontFace(GL_CCW);
+	//glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST); // Ask for nicest perspective correction
 
 }
 
@@ -133,23 +134,9 @@ void Window::Update(){
 
 void Window::Draw(){
     glfwMakeContextCurrent(windowHandle);
-
     for(int i=0;i<views.GetCount();i++){
-        //cout << "draw view " << i << "\n";
         views[i]->Draw();
-        //cout << "draw window\n";
     }
-
-           // Finish rendering of frame
-            //h3dFinalizeFrame();
-
-            // Remove all overlays
-            //h3dClearOverlays();
-
-            // Write all messages to log file
-            //h3dutDumpMessages();
-
-
 	glfwSwapBuffers(windowHandle);
 }
 

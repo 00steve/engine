@@ -46,15 +46,40 @@ public:
 
 
     /*create new 3d shapes of coolness*/
+    /**\brief Creates a new box in the current physics space and world.
+
+    The box needs dimensions, so a length, width, and height. It also needs a density,
+    and it should have a reference to the node that it is being created for added as
+    the void* argument.*/
     static void NewBox(dBodyID &body,dGeomID &geom,double3 dimensions,double density,void* data);
-    static void NewStaticPlane(dGeomID &geom,double3 direction,double offset,void* data);
+
+    /**\brief Creates new plane in the current physics space and world.
+
+    The normal of the normal is used to determine the angle of the plane, the
+    offset is used to determine how far away from the origin the plane sits.
+
+    Since this plane does not have a body,
+    it will be static by default, meaning that it has no mass and cannot be
+    moved by any objects. It is an immovable object.*/
+    static void NewPlane(dGeomID &geom,double3 normal,double offset,void* data);
+
+    /**\brief Create new sphere in the current physics space and world.
+
+    It creates a sphere. It needs a radius. 'nuff said.*/
+    static void NewSphere(dBodyID &body,dGeomID &geom,double radius,double density,void* data);
+
+    static void NewCylinder(dBodyID &body,dGeomID &geom,double radius,double length,double density,void* data);
 
     static PhysicsGroup* BuildPhysicsGroup(VarMap* groupSettings,void* data);
 
 
     static void GlMatrix(dBodyID body,float *matrix);
-
+    static void GlMatrix(dGeomID geom,float *matrix);
 
 
 };
 #endif // PHYSICS_WORLD_H
+
+
+
+

@@ -7,17 +7,12 @@ dJointGroupID PhysicsWorld::contactGroup;
 double PhysicsWorld::stepSize  = .01;
 
 
-
-
 PhysicsWorld::PhysicsWorld(){
     dInitODE();
     Init();
 }
 
 PhysicsWorld::~PhysicsWorld(){
-    //dJointGroupDestroy (contactGroup);
-    //dSpaceDestroy(spaceID);
-    //dWorldDestroy(worldID);
     dCloseODE();
 }
 
@@ -68,7 +63,7 @@ void PhysicsWorld::NearCallback (void *data, dGeomID o1, dGeomID o2) {
         } else if(csB && !csA){ //if only geom B has surface properties
             contact.surface = *csB;
         } else{  //if both geoms have surface properties
-            cout << "warning, no logic implimented if both objects have surface properties. Fix this shit!\n";
+            cout << "warning, no logic implemented if both objects have surface properties. Fix this shit!\n";
         }
         dContactGeom contacts[8];
         if (int numc = dCollide (o1,o2,8,contacts,sizeof(dContactGeom))) {
@@ -134,7 +129,7 @@ double3 PhysicsWorld::SetGravity(const double3 newGravity){
 }
 
 
-/*builds a box of a set size with a set density
+/**\brief Builds a box of a set size with a set density
 and adds the body to the world and the geom
 to the space, then returns a reference to that
 body.
@@ -153,44 +148,122 @@ void PhysicsWorld::NewBox(dBodyID &body,dGeomID &geom,double3 dimensions,double 
     geom = dCreateBox(spaceID,dimensions.x,dimensions.y,dimensions.z);
     dGeomSetBody (geom, body);
     dGeomSetData(geom,data);
-    cout << "   - completed object\n";
-
 }
-void PhysicsWorld::NewStaticPlane(dGeomID &geom,double3 direction,double offset,void* data){
-    direction.normalize();
-    geom = dCreatePlane (spaceID,direction.x,direction.y,direction.z,offset);
+/*PhysicsWorld::NewPlane(dBodyID &body,dGeomID &geom,double3 normal,void* data){
+    double magnitude = normal.length();
+    normal.normalize();
+    geom = dCreatePlane (spaceID,normal.x,normal.y,normal.z,magnitude);
+    dGeomSetData(geom,data);
+}*/
+void PhysicsWorld::NewPlane(dGeomID &geom,double3 normal,double offset,void* data){
+    normal.normalize();
+    geom = dCreatePlane (spaceID,normal.x,normal.y,normal.z,offset);
     dGeomSetData(geom,data);
 }
+void PhysicsWorld::NewSphere(dBodyID &body,dGeomID &geom,double radius,double density,void* data){
+    body = dBodyCreate(worldID);
+    dMass m;
+    dMassSetZero(&m);
+    dMassSetSphere(&m, density, radius);
+    dBodySetMass(body, &m);
+    geom = dCreateSphere(spaceID,radius);
+    dGeomSetBody (geom, body);
+    dGeomSetData(geom,data);
+}
+void PhysicsWorld::NewCylinder(dBodyID &body,dGeomID &geom,double radius,double length,double density, void* data){
+        body = dBodyCreate(worldID);
+        dMass m;
+        dMassSetZero(&m);
+        dMassSetCylinder(&m,density,3,radius,length);
+        geom = dCreateCylinder(spaceID,radius,length);
+        dGeomSetBody(geom,body);
+        dMatrix3 rot;
+        dRSetIdentity(rot);
+        dRFromAxisAndAngle(rot,1,0,0,1.57f);
+        dGeomSetRotation(geom,rot);
+        dGeomSetData(geom,data);
+    }
 
 
 PhysicsGroup* PhysicsWorld::BuildPhysicsGroup(VarMap* groupSettings,void* data){
-        cout << "build physics group\n";
+        //cout << "build physics group\n";
         PhysicsGroup* pGroup = new PhysicsGroup();
         List<string> groupNames = groupSettings->GroupNames();
         for(int i=0;i<groupNames.GetCount();i++){
-            cout << " - build object " << groupNames[i] << endl;
+            //cout << " - build object " << groupNames[i] << endl;
             VarMap props = groupSettings->GetGroup(groupNames[i]);
             dGeomID geom;
             dBodyID body;
-            double density = 0;
+
+            double density;
             if(props.IsSet("density")){
                 density = props.get<double>("density");
-                cout << "   - density\n";
+                if(density == 0){
+                    cout << "   - cannot be set to zero, being set to 1.\n";
+                    density = 1;
+                }
+            } else {
+                density = 1;
             }
+
             if(props.IsSet("geometry")){
                 string shape = props.get<string>("geometry");
-                if(shape == "box"){
 
+                if(shape == "box"){
                     double3 dimensions;
                     if(props.IsSet("lengths")){
-                        List<double> lengths = props.get<List<double> >("lengths");
-                        dimensions = double3(lengths[0],lengths[1],lengths[2]);
+                        dimensions = props.get<double3>("lengths");
                     } else {
                         dimensions = double3(1,1,1);
                     }
-                    cout << "   - build box\n";
                     NewBox(body,geom,dimensions,density,data);
                 }//end of if is a box
+
+                else if(shape == "plane"){
+                    double3 normal;
+                    double offset;
+                    if(props.IsSet("normal")){
+                        normal = props.get<double3>("normal");
+                    } else {
+                        normal = double3(0,1,0);
+                    }
+                    if(props.IsSet("offset")){
+                        offset = props.get<double>("offset");
+                    } else {
+                        offset = 0;
+                    }
+                    NewPlane(geom,normal,offset,data);
+                }//end of if is plane
+
+                else if(shape == "sphere"){
+                    double radius;
+                    if(props.IsSet("radius")){
+                        radius = props.get<double>("radius");
+                    } else {
+                        radius = 1;
+                    }
+                    NewSphere(body,geom,radius,density,data);
+                }//end of if is sphere
+
+                else if(shape == "cylinder"){
+                    double radius;
+                    double length;
+                    if(props.IsSet("radius")){
+                        radius = props.get<double>("radius");
+                    } else {
+                        radius = .5;
+                    }
+                    if(props.IsSet("length")){
+                        length = props.get<double>("length");
+                    } else {
+                        length = 1;
+                    }
+                    NewCylinder(body,geom,radius,length,density,data);
+                }
+
+                else {
+                    cout << "NO GEOMETRY TYPE IS SET\n";
+                }
             }
 
 
@@ -199,7 +272,13 @@ PhysicsGroup* PhysicsWorld::BuildPhysicsGroup(VarMap* groupSettings,void* data){
                     double3 pos = props.get<double3>("position");
                     dBodySetPosition(body,pos.x,pos.y,pos.z);
                 }
+
+                if(props.IsSet("velocity")){
+                    double3 velocity = props.get<double3>("velocity");
+                    dBodySetLinearVel(body,velocity.x,velocity.y,velocity.z);
+                }
                 pGroup->body.push(body,groupNames[i]);
+
             }
 
             if(geom){
@@ -216,6 +295,27 @@ PhysicsGroup* PhysicsWorld::BuildPhysicsGroup(VarMap* groupSettings,void* data){
 void PhysicsWorld::GlMatrix(dBodyID body,float *matrix){
     const dReal *R = dBodyGetRotation(body);
     const dReal *pos = dBodyGetPosition(body);
+    matrix[0]=R[0];
+    matrix[1]=R[4];
+    matrix[2]=R[8];
+    matrix[3]=0;
+    matrix[4]=R[1];
+    matrix[5]=R[5];
+    matrix[6]=R[9];
+    matrix[7]=0;
+    matrix[8]=R[2];
+    matrix[9]=R[6];
+    matrix[10]=R[10];
+    matrix[11]=0;
+    matrix[12]=pos[0];
+    matrix[13]=pos[1];
+    matrix[14]=pos[2];
+    matrix[15]=1;
+}
+
+void PhysicsWorld::GlMatrix(dGeomID geom,float *matrix){
+    const dReal *R = dGeomGetRotation(geom);
+    const dReal *pos = dGeomGetPosition(geom);
     matrix[0]=R[0];
     matrix[1]=R[4];
     matrix[2]=R[8];

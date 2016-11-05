@@ -12,7 +12,9 @@ protected:
     dGeomID geom;
     float gl_matrix[16];
 	double3 position;
-	bool active;
+	double3 velocity;
+    bool active;
+    double density;
 
 	/*variables to tell the object the angle of the
 	floor. 0 radians is flat (facing directly upwards). 1.57
@@ -21,7 +23,6 @@ protected:
 	double floorAngle;
 
     virtual void OnSetSettings();
-
     virtual bool HandleMessage(NodeMessage message);
 
 public:

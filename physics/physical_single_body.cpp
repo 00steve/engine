@@ -3,17 +3,37 @@
 
 
 void PhysicalSingleBody::OnSetSettings(){
-    Physical::OnSetSettings();
-    cout << "physical single body settings : \n";
-    cout << " - asset id " << &Assets() << endl;
-    if(Settings().IsSet("position")){
-        List<double> pos = Settings().get<List<double> >("position");
+    VarMap settings = Settings();
+
+    if(settings.IsSet("position")){
+        List<double> pos = settings.get<List<double> >("position");
         if(pos.GetCount() == 3){
             position = double3(pos[0],pos[1],pos[2]);
         }
-
+    } else {
+        position = double3(0,0,0);
     }
 
+    if(settings.IsSet("density")){
+        density = settings.get<double>("density");
+    } else {
+        density = 1;
+    }
+
+    if(settings.IsSet("velocity")){
+        List<double> vel = settings.get<List<double> >("velocity");
+        if(vel.GetCount() == 3){
+            velocity = double3(vel[0],vel[1],vel[2]);
+        } else {
+            velocity = double3(0,0,0);
+            cout << "the velocity property should have 3 numbers, e.g. 123,5.3421,.412\n";
+        }
+    } else {
+        velocity = double3(0,0,0);
+    }
+
+
+    Physical::OnSetSettings();
 }
 
 
@@ -37,10 +57,6 @@ PhysicalSingleBody::~PhysicalSingleBody()
 void PhysicalSingleBody::Update(){
     if(body && (active = dBodyIsEnabled(body))){
         PhysicsWorld::GlMatrix(body,gl_matrix);
-        //const dReal *tPos = dBodyGetPosition(body);
-        //position.x = tPos[0];
-        //position.y = tPos[1];
-        //position.z = tPos[2];
     }
     Physical::Update();
 }

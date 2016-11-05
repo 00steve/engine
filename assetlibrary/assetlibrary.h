@@ -43,9 +43,7 @@ public:
 
         string funcName = "Build";
         if(fileName.substr(fileName.length()-type.length()-4) != type+".dll"){
-            cout << " - loading generic dlls - " << fileName << endl;
             funcName += stringToUpperCaseFirst(type.substr(type.find('.')+1));
-            cout << "    - func name is " << funcName << endl;
         }
 
         T object = GetDllValue<T>(dll,funcName.c_str());

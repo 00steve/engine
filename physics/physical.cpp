@@ -10,7 +10,6 @@ int Physical::GetNextCollisionGroupId(string name){
 }
 
 void Physical::OnSetSettings(){
-    cout << "[physical :: on set settings\n";
     Node::OnSetSettings();
 }
 

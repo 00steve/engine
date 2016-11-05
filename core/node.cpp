@@ -256,7 +256,7 @@ map<Node*> &Node::Globals(){
 
 
 bool Node::RegisterGlobal(Node* globalNode,string name){
-    cout << " - [register global] " << name << endl;
+    //cout << " - [register global] " << name << endl;
     if(Globals().isSet(name)){
         Globals()[name] = globalNode;
     } else {

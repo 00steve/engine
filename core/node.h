@@ -14,6 +14,14 @@
 
 
 /**
+About
+----------------------------------------------------------------
+This is the class that most all other engine classes are based on. It contains all of the basic expected functionality of
+any nodes in the engine. It takes care of linking children to parents, reference counting, and various other boilerplate
+things that would be very annoying to do over and over again.
+
+It also provides a default communication method to allow any node with a pointer to any other node to send it a message of
+any type, via the NodeMessage class.
 
 Static member variables
 ----------------------------------------------------------------
@@ -205,9 +213,13 @@ protected:
 	internal lists.*/
 	virtual void OnUnlink(Node* otherNode);
 
-    /**\brief By default this function does nothing. It can be overwritten to do things
-    specific to the implementation. It is called at the end of the SetSettings() function.
-    */
+    /**\brief By default this function does nothing. It is called when the SetSetting()
+    function is called. By default, node don't care if anything has changed with settings,
+    but this is provided because we recognize that people will want to do things when
+    the settings are changed.
+
+    It can be overwritten to do things specific to the implementation. It is called at the
+    end of the SetSettings() function. Do with it what you wish.*/
     virtual void OnSetSettings();
 
 

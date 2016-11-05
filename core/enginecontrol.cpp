@@ -29,7 +29,7 @@ void EngineControl::OnSetSettings(){
             cout << " - node has a type " << type << endl;
             newChild = Load("",prop);
             if(newChild){
-                cout << "   - LOADED " << type << endl;
+                //cout << "   - LOADED " << type << endl;
                 Child(newChild);
             }
         }
