@@ -70,6 +70,39 @@ public:
 
     static void NewCylinder(dBodyID &body,dGeomID &geom,double radius,double length,double density,void* data);
 
+
+    /**\brief Generates a capsule with the given height and radius, with the mass
+    that was argued.*/
+    static void NewCapsule(dBodyID &body,dGeomID &geom,double height,double radius,double density, void* data);
+
+    /**\brief Given a VarMap of different objects, which should be arranged as groups with their
+    specific properties, generates physics objects and returns them in each group, with property names
+    such as body and geom.
+
+    The following is an example VarMap that will build a sphere and a box:
+    {
+        sphere1{
+            radius 2
+            position 0,4,0
+        }
+        box{
+            lengths 1,1,2
+            position -1,0,0
+        }
+    }
+
+    The following objects will be returned:
+    {
+        sphere1{
+            body (object)
+            geom (object)
+        }
+        box{
+            body (object)
+            geom (object)
+        }
+    }
+    */
     static PhysicsGroup* BuildPhysicsGroup(VarMap* groupSettings,void* data);
 
 

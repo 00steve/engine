@@ -61,14 +61,6 @@ void PhysicalSingleBody::Update(){
     Physical::Update();
 }
 
-	/*bool handleMessage(node_message* m){
-        switch(m->code){
-        case MESSAGE_PROJECTILE_IMPACT:
-            cout << this->getName() << " hit with bullet!\n";
-            return true;
-        }
-        return physical::handleMessage(m);
-	}*/
 
 bool PhysicalSingleBody::HandleMessage(NodeMessage m){
     /*
@@ -122,15 +114,7 @@ void PhysicalSingleBody::ShiftPosition(const double3 offset){
     //position.z = tPos[2];
 }
 
-/**\brief adds a force at the COG of an object.
 
-The force is added at the COG(center of gravity)
-of the object. This force causes acceleration, but
-not rotational change because it is acting on the
-center of gravity. If you want to simulate push or
-some type of force acting on an object that could
-cause velocity or rotational change, use the
-addForceAtPoint() function**/
 void PhysicalSingleBody::AddForce(const double3 force){
     dBodyAddForce(body,force.x,force.y,force.z);
 }

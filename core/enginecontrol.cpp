@@ -26,10 +26,8 @@ void EngineControl::OnSetSettings(){
         prop = nodes.GetGroup(nNames[i]);
         if(prop.IsSet("type")){
             type = prop.get<string>("type");
-            cout << " - node has a type " << type << endl;
             newChild = Load("",prop);
             if(newChild){
-                //cout << "   - LOADED " << type << endl;
                 Child(newChild);
             }
         }

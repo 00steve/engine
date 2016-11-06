@@ -171,18 +171,37 @@ void PhysicsWorld::NewSphere(dBodyID &body,dGeomID &geom,double radius,double de
     dGeomSetData(geom,data);
 }
 void PhysicsWorld::NewCylinder(dBodyID &body,dGeomID &geom,double radius,double length,double density, void* data){
-        body = dBodyCreate(worldID);
-        dMass m;
-        dMassSetZero(&m);
-        dMassSetCylinder(&m,density,3,radius,length);
-        geom = dCreateCylinder(spaceID,radius,length);
-        dGeomSetBody(geom,body);
-        dMatrix3 rot;
-        dRSetIdentity(rot);
-        dRFromAxisAndAngle(rot,1,0,0,1.57f);
-        dGeomSetRotation(geom,rot);
-        dGeomSetData(geom,data);
-    }
+    body = dBodyCreate(worldID);
+    dMass m;
+    dMassSetZero(&m);
+    dMassSetCylinder(&m,density,3,radius,length);
+    geom = dCreateCylinder(spaceID,radius,length);
+    dGeomSetBody(geom,body);
+    dMatrix3 rot;
+    dRSetIdentity(rot);
+    dRFromAxisAndAngle(rot,1,0,0,1.57f);
+    dGeomSetRotation(geom,rot);
+    dGeomSetData(geom,data);
+}
+
+
+
+    /*generates a capsule with the given height and radius, with the mass
+    that was argued.*/
+void PhysicsWorld::NewCapsule(dBodyID &body,dGeomID &geom,double radius,double height,double density, void* data){
+    body = dBodyCreate(worldID);
+    dMass m;
+    //dMassSetZero(&m);
+    dMassSetCapsule(&m,density,2,radius,height);
+    geom = dCreateCapsule(spaceID,radius,height);
+    dGeomSetBody(geom,body);
+    dMatrix3 rot;
+    dRSetIdentity(rot);
+    dRFromAxisAndAngle(rot,1,0,0,1.57f);
+    dGeomSetRotation(geom,rot);
+    dGeomSetData(geom,data);
+}
+
 
 
 PhysicsGroup* PhysicsWorld::BuildPhysicsGroup(VarMap* groupSettings,void* data){
@@ -260,6 +279,23 @@ PhysicsGroup* PhysicsWorld::BuildPhysicsGroup(VarMap* groupSettings,void* data){
                     }
                     NewCylinder(body,geom,radius,length,density,data);
                 }
+
+                else if(shape == "capsule"){
+                    double radius;
+                    double length;
+                    if(props.IsSet("radius")){
+                        radius = props.get<double>("radius");
+                    } else {
+                        radius = .5;
+                    }
+                    if(props.IsSet("length")){
+                        length = props.get<double>("length");
+                    } else {
+                        length = 2;
+                    }
+                    NewCapsule(body,geom,radius,length-radius*2,density,data);
+                }
+
 
                 else {
                     cout << "NO GEOMETRY TYPE IS SET\n";

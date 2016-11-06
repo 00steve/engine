@@ -78,7 +78,13 @@ public:
     engine.**/
     unsigned int ContactMode(unsigned int mode);
 
-    void Update();
+
+    /**\brief updates the physical object. By default, this really
+    just clears out the collisions list. Any classes that override
+    this should also call collisions.clear(), or they will keep
+    accumulating, which is probably a bad thing.
+    */
+    virtual void Update();
 
     void AddCollision(Collision* c);
 
