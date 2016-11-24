@@ -103,7 +103,11 @@ public:
     /**\brief if an object is virtual it will not generate contact hinges that apply forces to it or what is colliding with it.**/
     bool Virtual(bool setVirt);
 
-    /**\brief set if the object should not collide with itself or other objects of its type.**/
+    /**\brief set if the object should not collide with itself or other objects of its type.
+
+    This does not dictate whether an object can have a body(s) or not. That is up to the implementing class. This is
+    an override used by engine to basically form a generic group of objects that will not interact with each other.
+    **/
     bool Static(bool setStat);
 
 	/**\brief "should" set the object and any bodies it is comprised of to have infinite mass.**/
@@ -116,6 +120,10 @@ public:
 	kinematic**/
 	virtual void Dynamic();
 
+    /**\brief Set if the physical object is enabled or not
+
+    This overrides the Node definition and should include enabling or
+    disabling the physics of the object if it is enabled or disabled.*/
 	virtual bool Enabled(const bool enabled);
 
 	virtual void LinearDampening(double scale);

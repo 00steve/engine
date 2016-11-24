@@ -45,7 +45,6 @@ public:
         if(fileName.substr(fileName.length()-type.length()-4) != type+".dll"){
             funcName += stringToUpperCaseFirst(type.substr(type.find('.')+1));
         }
-
         T object = GetDllValue<T>(dll,funcName.c_str());
         return object;
     }

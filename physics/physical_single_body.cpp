@@ -3,6 +3,7 @@
 
 
 void PhysicalSingleBody::OnSetSettings(){
+    cout << ">PhysicalSingleBody";
     VarMap settings = Settings();
 
     if(settings.IsSet("position")){

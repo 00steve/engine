@@ -1,15 +1,14 @@
 #ifndef SPAWNER_H
 #define SPAWNER_H
 
-#include "../nodes/marker.h"
-#include "../graphics/gl_shape.h"
-#include "../core/random.h"
+#include <engine/core/varmap.h>
+#include <engine/physics/physical.h>
+#include <engine/mechanism/marker.h>
 
 template <typename nodeType>
-class spawner : public marker{
+class Spawner : public Marker{
 private:
 
-	varMap settings;
 
 	bool use_total_spawns;
 	bool use_period;
@@ -29,7 +28,7 @@ private:
 	starting number of ticks and the tick interval
 	between spawns.*/
 	int spawns_left;
-	mesh m;
+	//mesh m;
 
 	/*the amount that the velocity of the spawner at
 	the creation of a spawnee is inherited by the
@@ -61,45 +60,72 @@ protected:
 	it does nothing by default, but can be overwritten by any
 	inheriting classes and stuff can be done with it, whatever
 	the template class type allows.**/
-	virtual void onSpawn(nodeType *node){
+	virtual void OnSpawn(nodeType *node){
 	}
+
+	void OnSetSettings(){
+	    cout << ">spawner";
+        Marker::OnSetSettings();
+	}
+
 
 public:
 
-	spawner(double3 position,double radius,int interval,int totalSpawns,double velocityMultiplier) :
-				marker(position,radius),
-				interval(interval),
-				spawns_left(totalSpawns),
-				velocity_multiplier(velocityMultiplier)
-			{
-		cout << "built a spawner and shit\n";
-	}
+/*
+	Spawner(VarMap settings){
 
-	spawner(varMap settings) :
-				marker(settings),
-				settings(settings)
-			{
-		interval = setup::getInt(settings,"interval",1000);
-		cout << "spawner :: interval = " << interval << endl;
-		spawns_left = setup::getInt(settings,"total-spawns",(setup::getInt(settings,"duration",-interval)/interval));
-		cout << "spawner :: spawns left = " << spawns_left << endl;
-		velocity_multiplier = setup::getDouble(settings,"inherit-velocity",0);
-		cout << "spawner :: spawner velocity multiplier = " << velocity_multiplier << endl;
-		cout << "spawns left : " << spawns_left << endl;
-		spawn_velocity = setup::getDouble3(settings,"velocity",double3(0,0,0));
-		cout << "spawner :: initial velocity = " << spawn_velocity.x << "," << spawn_velocity.y << "," << spawn_velocity.z << "\n";
-		randomize_velocity = setup::getDouble3(settings,"randomize-velocity",double3(0,0,0));
-		cout << "spawner :: velocity rand() = " << randomize_velocity.x << "," << randomize_velocity.y << "," << randomize_velocity.z << "\n";
-		counter = 0;
-		/*setup shape that is drawn by the engine*/
-		m = glShape::sphere(10,10,10);
-	}
+    if(settings.IsSet("interval")){
+        interval = settings.get<int>("interval");
+    } else {
+        interval = 1;
+    }*/
+    //interval = setup::getInt(settings,"interval",1000);
+    //cout << "spawner :: interval = " << interval << endl;
+    //spawns_left = setup::getInt(settings,"total-spawns",(setup::getInt(settings,"duration",-interval)/interval));
+    //cout << "spawner :: spawns left = " << spawns_left << endl;
+    //velocity_multiplier = setup::getDouble(settings,"inherit-velocity",0);
+    //cout << "spawner :: spawner velocity multiplier = " << velocity_multiplier << endl;
+    //cout << "spawns left : " << spawns_left << endl;
+    //spawn_velocity = setup::getDouble3(settings,"velocity",double3(0,0,0));
+    //cout << "spawner :: initial velocity = " << spawn_velocity.x << "," << spawn_velocity.y << "," << spawn_velocity.z << "\n";
+    //randomize_velocity = setup::getDouble3(settings,"randomize-velocity",double3(0,0,0));
+    //cout << "spawner :: velocity rand() = " << randomize_velocity.x << "," << randomize_velocity.y << "," << randomize_velocity.z << "\n";
+    //counter = 0;
+    /*setup shape that is drawn by the engine
+    //m = glShape::sphere(10,10,10);
 
-	~spawner(){
-		#if DEBUG_DELETES
-			cout << " spawner >";
-		#endif
-	}
+    interval = 1;
+    spawns_left = 1000;
+    velocity_multiplier = 1;
+    spawn_velocity = double3(0,1,0);
+    randomize_void Spawner::SetSpawnInterval(int newInterval){
+    interval = newInterval;
+}*/
+
+    ~Spawner(){
+    }
+
+
+    void SetVelocityRandomization(double3 amount){
+        randomize_velocity = amount;
+    }
+
+    void SetVelocityRandomization(double amount){
+        randomize_velocity = double3(amount,amount,amount);
+    }
+
+    void SetInitialVelocity(double3 velocity){
+        spawn_velocity = velocity;
+    }
+
+    void SetSpawnsLeft(int spawnsLeft){
+        spawns_left = spawnsLeft;
+    }
+
+    int IntervalBeforeNextSpawn(){
+        return counter;
+    }
+
 
 	/**\brief update the spawner.
 
@@ -108,21 +134,7 @@ public:
 	generated.
 
 	When it is finished, it kills itself**/
-	void update(){
-		--counter;
-		while(counter < 1){
-			counter += interval;
-			/*calculate random point in sphere within spawn radius*/
-			nodeType *n = new nodeType(position+randomPointInSphere(radius),spawn_velocity+randomPointInSphere(randomize_velocity));
-            sendMessage(getParent(),MESSAGE_ADD_DRAWABLE,(void*)n);
-            onSpawn(n);
-			if(spawns_left == -1) continue;
-			if(--spawns_left < 1){
-				kill();
-				return;
-			}
-		}
-		marker::update();
+	void Update(){
 	}
 
 	/**\brief allow the interval between spawns to be set at
@@ -132,27 +144,9 @@ public:
 	class that have generic settings that may be different from
 	the default spawner setting, but are common enough that forcing
 	the user to put the new setting in the config file is stuff.**/
-	void setSpawnInterval(int newInterval){
-		interval = newInterval;
-	}
-
-	void setVelocityRandomization(double3 amount){
-		randomize_velocity = amount;
-	}
-
-	void setVelocityRandomization(double amount){
-		randomize_velocity = double3(amount,amount,amount);
-	}
-
-	void setInitialVelocity(double3 velocity){
-		spawn_velocity = velocity;
-	}
-
-	void setSpawnsLeft(int spawnsLeft){
-		spawns_left = spawnsLeft;
-	}
-
-	int intervalBeforeNextSpawn(){ return counter; }
+    void SetSpawnInterval(int newInterval){
+        interval = newInterval;
+    }
 
 };
 

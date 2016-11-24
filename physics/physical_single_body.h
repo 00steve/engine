@@ -5,6 +5,14 @@
 #include <engine/physics/physics_world.h>
 
 
+/**\brief The physical single body class is a generic physics object that
+can be used as the starting point for many basic physical objects.
+
+It includes one body and one geom, which need to be instantiated by the inheriting
+class. Its OnSetSettings() override from the Node class automatically takes care
+of setting properties like the position, velocity, etc. of the object.
+**/
+
 class PhysicalSingleBody : public Physical{
 protected:
 

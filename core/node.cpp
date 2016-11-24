@@ -172,6 +172,7 @@ void Node::Update(){
 
 
 void Node::OnSetSettings(){
+    cout << ">Node\n";
 }
 
 
