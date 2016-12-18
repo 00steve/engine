@@ -7,6 +7,7 @@ or interact with other physical objects in the ODE simulation.*/
 
 #include <engine/core/node.h>
 #include <engine/physics/collision.h>
+#include <engine/physics/physics_world.h>
 
 #define PROJECTILE_GROUP 1
 #define EXPLOSION_GROUP 2
@@ -56,6 +57,8 @@ private:
 	static map<int> collision_groups;
 	static int next_collision_group_id;
 
+	PhysicsWorld* world;
+
 protected:
 
     /*store a list of nodes that this node has collided with.
@@ -65,6 +68,24 @@ protected:
 	static int GetNextCollisionGroupId(string name);
 
 	virtual void OnSetSettings();
+
+	/**\brief Default Physical override of the Node::OnSetParent() virtual
+	callback.
+
+	When a parent is set, it checks to see if there is a PhysicsWorld class
+	in the node tree above this class. If it finds one, it calls the
+	OnSetWorld() function.**/
+	virtual void OnSetParent();
+
+	/**\brief Callback for when a PhysicsWorld is set.
+
+	This is called when the Physical has parent, or grandparent, etc. that
+	inherits from the PhysicsWorld class. If it does, the World() function
+	can be used to return a pointer to that object, and that pointer can
+	be used to create bodies, shapes, joints, etc. for physical simulation.
+
+	By default this callback does nothing*/
+	virtual void OnSetWorld();
 
 	virtual bool HandleMessage(NodeMessage message);
 public:
@@ -210,7 +231,7 @@ public:
 
 	virtual void DefaultEnabled(const bool enabled);
 
-
+    PhysicsWorld* World();
 
 
 };

@@ -359,11 +359,10 @@ PhysicsGroup* PhysicsWorld::BuildPhysicsGroup(VarMap* groupSettings,void* data){
 
         //build any joints
         if(containsJoints){
-            cout << "contains joints\n";
             VarMap jointsGroup = groupSettings->GetGroup("joints");
             groupNames = jointsGroup.GroupNames();
             for(int i=0;i<groupNames.GetCount();i++){
-                cout << " - build joint " << groupNames[i] << endl;
+                //cout << " - build joint " << groupNames[i] << endl;
                 VarMap jProps = jointsGroup.GetGroup(groupNames[i]);
                 string type = "ball-and-socket";
                 if(jProps.IsSet("type")){
@@ -372,7 +371,7 @@ PhysicsGroup* PhysicsWorld::BuildPhysicsGroup(VarMap* groupSettings,void* data){
                 dJointID joint;
                 dBodyID body1 = pGroup->body[jProps.get<string>("body1")];
                 dBodyID body2 = pGroup->body[jProps.get<string>("body2")];
-                cout << "   - type : " << type << endl;
+                //cout << "   - type : " << type << endl;
                 if(type == "ball-and-socket"){
                     double3 anchor = jProps.get<double3>("anchor");
                     NewBallAndSocketJoint(joint,body1,body2,anchor);
@@ -385,7 +384,7 @@ PhysicsGroup* PhysicsWorld::BuildPhysicsGroup(VarMap* groupSettings,void* data){
                     pGroup->joint.push(joint,groupNames[i]);
 
                 } else {
-                    cout << "   - [not implimented]\n";
+                    cout << "   - [joint type not implimented]\n";
                 }
 
             }

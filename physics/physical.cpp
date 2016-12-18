@@ -13,6 +13,13 @@ void Physical::OnSetSettings(){
     Node::OnSetSettings();
 }
 
+void Physical::OnSetParent(){
+    world = Closest<PhysicsWorld>();
+    if(world) OnSetWorld();
+}
+
+void Physical::OnSetWorld(){}
+
 Physical::Physical() :
         maxContactPoints(4),
         virt(false),
@@ -22,7 +29,8 @@ Physical::Physical() :
         selectable(true),
         group(0),
         contact_mode(dContactBounce | dContactSoftCFM),
-        shouldDefaultEnabled(false) {
+        shouldDefaultEnabled(false),
+        world(NULL) {
     }
 
 Physical::~Physical(){
@@ -137,5 +145,7 @@ bool Physical::DefaultEnabled(){ return shouldDefaultEnabled; };
 void Physical::DefaultEnabled(const bool enabled){
     shouldDefaultEnabled = enabled;
 }
+
+PhysicsWorld* Physical::World(){ return world; }
 
 

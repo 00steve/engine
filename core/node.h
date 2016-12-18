@@ -249,7 +249,7 @@ protected:
     template <class T>
     T* Closest(){
         if(!parent) return NULL;
-        T* castParent = dynamic_cast<T*>(&parent);
+        T* castParent = dynamic_cast<T*>(parent);
         if(castParent) return castParent;
         return parent->Closest<T>();
     }

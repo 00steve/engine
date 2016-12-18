@@ -5,7 +5,9 @@
 #define dSINGLE
 #include <ode/ode.h>
 
+
 #include <engine/core/double3.h>
+class PhysicsWorld;
 #include <engine/physics/physical.h>
 #include <engine/physics/physicsgroup.h>
 
