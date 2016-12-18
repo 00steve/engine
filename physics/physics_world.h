@@ -15,14 +15,14 @@ class PhysicsWorld{
 private:
 
     /*physics world stuff for the fps*/
-    static dWorldID worldID;
-    static dSpaceID spaceID;
-    static dJointGroupID contactGroup;
-	static double stepSize;
+    dWorldID worldID;
+    dSpaceID spaceID;
+    dJointGroupID contactGroup;
+	double stepSize;
 
-    static void NearCallback (void *data, dGeomID o1, dGeomID o2);
-
-    static void Init(){
+    void NearCallback (void *data, dGeomID o1, dGeomID o2);
+    static void NearCallbackStatic(void *data,dGeomID o1, dGeomID o2);
+    void Init(){
         cout << "Initialize physics\n";
         stepSize  = .01;
         worldID = dWorldCreate();
@@ -37,14 +37,14 @@ public:
     ~PhysicsWorld();
 
 
-    static void Step();
+    void Step();
 
 
-    static void PhysicsSettings(VarMap settings);
+    void PhysicsSettings(VarMap settings);
 
 
     /*set the world settings, like bounciness, constant force mixing, gravity, etc.*/
-    static double3 SetGravity(const double3 newGravity);
+    double3 SetGravity(const double3 newGravity);
 
 
     /*create new 3d shapes of coolness*/
@@ -53,7 +53,7 @@ public:
     The box needs dimensions, so a length, width, and height. It also needs a density,
     and it should have a reference to the node that it is being created for added as
     the void* argument.*/
-    static void NewBox(dBodyID &body,dGeomID &geom,double3 dimensions,double density,void* data);
+    void NewBox(dBodyID &body,dGeomID &geom,double3 dimensions,double density,void* data);
 
     /**\brief Creates new plane in the current physics space and world.
 
@@ -63,23 +63,23 @@ public:
     Since this plane does not have a body,
     it will be static by default, meaning that it has no mass and cannot be
     moved by any objects. It is an immovable object.*/
-    static void NewPlane(dGeomID &geom,double3 normal,double offset,void* data);
+    void NewPlane(dGeomID &geom,double3 normal,double offset,void* data);
 
     /**\brief Create new sphere in the current physics space and world.
 
     It creates a sphere. It needs a radius. 'nuff said.*/
-    static void NewSphere(dBodyID &body,dGeomID &geom,double radius,double density,void* data);
+    void NewSphere(dBodyID &body,dGeomID &geom,double radius,double density,void* data);
 
-    static void NewCylinder(dBodyID &body,dGeomID &geom,double radius,double length,double density,void* data);
+    void NewCylinder(dBodyID &body,dGeomID &geom,double radius,double length,double density,void* data);
 
 
     /**\brief Generates a capsule with the given height and radius, with the mass
     that was argued.*/
-    static void NewCapsule(dBodyID &body,dGeomID &geom,double height,double radius,double density, void* data);
+    void NewCapsule(dBodyID &body,dGeomID &geom,double height,double radius,double density, void* data);
 
 
-    static void NewUniversalJoint(dJointID &joint,dBodyID &body1,dBodyID &body2,double3 anchor);
-    static void NewBallAndSocketJoint(dJointID &joint,dBodyID &body1,dBodyID &body2,double3 anchor);
+    void NewUniversalJoint(dJointID &joint,dBodyID &body1,dBodyID &body2,double3 anchor);
+    void NewBallAndSocketJoint(dJointID &joint,dBodyID &body1,dBodyID &body2,double3 anchor);
 
     /**\brief Given a VarMap of different objects, which should be arranged as groups with their
     specific properties, generates physics objects and returns them in each group, with property names
@@ -109,7 +109,7 @@ public:
         }
     }
     */
-    static PhysicsGroup* BuildPhysicsGroup(VarMap* groupSettings,void* data);
+    PhysicsGroup* BuildPhysicsGroup(VarMap* groupSettings,void* data);
 
 
     static void GlMatrix(dBodyID body,float *matrix);

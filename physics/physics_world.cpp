@@ -1,10 +1,10 @@
 #include "physics_world.h"
 
 
-dWorldID PhysicsWorld::worldID;
-dSpaceID PhysicsWorld::spaceID;
-dJointGroupID PhysicsWorld::contactGroup;
-double PhysicsWorld::stepSize  = .01;
+//dWorldID PhysicsWorld::worldID;
+//dSpaceID PhysicsWorld::spaceID;
+//dJointGroupID PhysicsWorld::contactGroup;
+//double PhysicsWorld::stepSize  = .01;
 
 
 PhysicsWorld::PhysicsWorld(){
@@ -21,7 +21,7 @@ void PhysicsWorld::Step(){
     // remove all contact joints
     dJointGroupEmpty (contactGroup);
     // find collisions and add contact joints
-    dSpaceCollide (spaceID,0,&PhysicsWorld::NearCallback);
+    dSpaceCollide (spaceID,(void*)this,&PhysicsWorld::NearCallbackStatic);
     // step the simulation
     dWorldQuickStep(worldID,stepSize);
 }
@@ -96,6 +96,11 @@ void PhysicsWorld::NearCallback (void *data, dGeomID o1, dGeomID o2) {
     else {
         cout << "neither geom is grouped\n";
     }
+}
+
+void PhysicsWorld::NearCallbackStatic(void *data,dGeomID o1, dGeomID o2){
+    PhysicsWorld* world = (PhysicsWorld*)data;
+    world->NearCallback(NULL,o1,o2);
 }
 
 

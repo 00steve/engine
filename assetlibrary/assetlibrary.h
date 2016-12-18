@@ -2,6 +2,9 @@
 #define ASSET_LIBRARY_H
 
 #include <string>
+#include <fstream>
+#include <streambuf>
+
 #include <engine/core/varmap.h>
 #include <engine/core/stringutil.h>
 #include <engine/core/map.h>
@@ -22,6 +25,8 @@ public:
 	//static Sound* LoadSound();
 
 	static VarMap LoadSettings(string fileName);
+
+	static string LoadString(string fileName);
 
 	template <class T>
     static T Load(string fileName,VarMap settings){
@@ -51,7 +56,7 @@ public:
     }
 
 
-
+    static string RootDirectory();
 
 
     //Node*               LoadCustom(Node* loader,string settingsName,VarMap settings);

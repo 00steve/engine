@@ -15,6 +15,24 @@ VarMap AssetLibrary::LoadSettings(string fileName){
 }
 
 
+string AssetLibrary::LoadString(string fileName){
+    if(loadedFiles.exists(fileName)){
+        cout << "found existing load of " << fileName << endl;
+        return *((string*)loadedFiles[fileName]);
+    }
+    ifstream file(fileName);
+    if(!file){
+        cout << "[LoadString] file " << fileName << " could not be loaded!\n";
+        return "";
+    }
+    stringstream buffer;
+    buffer << file.rdbuf();
+    string output = buffer.str();
+    loadedFiles.push((void*)new string(output),fileName);
+    return output;
+}
+
+
 VarMap AssetLibrary::LoadSettingsFile(string fileName){
 	fileName = rootDirectory+"settings/"+fileName;
 	cout << "load settings file " << fileName << endl;
@@ -28,4 +46,6 @@ VarMap AssetLibrary::LoadSettingsFile(string fileName){
 }
 
 
-
+string AssetLibrary::RootDirectory(){
+    return rootDirectory;
+}
