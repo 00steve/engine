@@ -1,6 +1,10 @@
 #include "enginecontrol.h"
 
 
+EngineControl::~EngineControl(){
+    cout << "engine control > ";
+}
+
 
 void EngineControl::OnSetSettings(){
     VarMap settings = Settings();
@@ -37,11 +41,7 @@ void EngineControl::OnSetSettings(){
 
 
 void EngineControl::OnGlobalRequest(Node* globalNodeRef,string name){
-
 }
-
-
-
 
 
 void EngineControl::Update(){

@@ -5,6 +5,8 @@
 /*node level functions 10-29*/
 #define MESSAGE_FINISHED 			10
 #define MESSAGE_STARTED 			11
+#define MESSAGE_SET_PARENT          12
+#define MESSAGE_UNSET_PARENT        13
 
 /*drawable level functions 30-49*/
 #define MESSAGE_ADD_DRAWABLE 		30

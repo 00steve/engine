@@ -9,6 +9,7 @@
 struct PhysicsGroup{
     map<dGeomID> geom;
     map<dBodyID> body;
+    map<dJointID> joint;
 };
 
 

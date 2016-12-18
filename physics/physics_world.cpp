@@ -13,6 +13,7 @@ PhysicsWorld::PhysicsWorld(){
 }
 
 PhysicsWorld::~PhysicsWorld(){
+    cout << "physics world > ";
     dCloseODE();
 }
 
@@ -26,10 +27,20 @@ void PhysicsWorld::Step(){
 }
 
 void PhysicsWorld::NearCallback (void *data, dGeomID o1, dGeomID o2) {
+
+    /*check to see if there are two bodies and if they are connected
+    by a joint already.*/
+    dBodyID b1 = dGeomGetBody(o1);
+    dBodyID b2 = dGeomGetBody(o2);
+
+    if(b1 && b2 && dAreConnected(b1,b2)) return;
+
     /*see if any of the objects that are colliding have info about
     them that can be checked.*/
     Physical* nA = (Physical*)dGeomGetData(o1);
     Physical* nB = (Physical*)dGeomGetData(o2);
+
+
     /*if both either of the geoms doesn't have a physical, or both
     physicals are static or both physicals are virtual, bail from
     the collision check.
@@ -67,8 +78,8 @@ void PhysicsWorld::NearCallback (void *data, dGeomID o1, dGeomID o2) {
         }
         dContactGeom contacts[8];
         if (int numc = dCollide (o1,o2,8,contacts,sizeof(dContactGeom))) {
-            dBodyID b1 = dGeomGetBody(o1);
-            dBodyID b2 = dGeomGetBody(o2);
+            //dBodyID b1 = dGeomGetBody(o1);
+            //dBodyID b2 = dGeomGetBody(o2);
             /*make sure that both physicals are not virtual before
             generating contact points*/
             if(!nA->Virtual() && !nB->Virtual()){
@@ -185,6 +196,19 @@ void PhysicsWorld::NewCylinder(dBodyID &body,dGeomID &geom,double radius,double 
 }
 
 
+void PhysicsWorld::NewUniversalJoint(dJointID &joint,dBodyID &body1,dBodyID &body2,double3 anchor){
+    joint = dJointCreateUniversal(worldID, 0);
+    dJointAttach(joint, body1, body2);
+    dJointSetUniversalAnchor(joint, anchor.x, anchor.y, anchor.z);
+}
+
+
+void PhysicsWorld::NewBallAndSocketJoint(dJointID &joint,dBodyID &body1,dBodyID &body2,double3 anchor){
+    joint = dJointCreateBall(worldID,0);
+    dJointAttach(joint,body1,body2);
+    dJointSetBallAnchor(joint,anchor.x,anchor.y,anchor.z);
+}
+
 
     /*generates a capsule with the given height and radius, with the mass
     that was argued.*/
@@ -206,10 +230,18 @@ void PhysicsWorld::NewCapsule(dBodyID &body,dGeomID &geom,double radius,double h
 
 PhysicsGroup* PhysicsWorld::BuildPhysicsGroup(VarMap* groupSettings,void* data){
         //cout << "build physics group\n";
+        bool containsJoints = false;
+
         PhysicsGroup* pGroup = new PhysicsGroup();
+
         List<string> groupNames = groupSettings->GroupNames();
         for(int i=0;i<groupNames.GetCount();i++){
             //cout << " - build object " << groupNames[i] << endl;
+            if(groupNames[i] == "joints"){
+                //cout << "   - skip\n";
+                containsJoints = true;
+                continue;
+            }
             VarMap props = groupSettings->GetGroup(groupNames[i]);
             dGeomID geom;
             dBodyID body;
@@ -294,6 +326,7 @@ PhysicsGroup* PhysicsWorld::BuildPhysicsGroup(VarMap* groupSettings,void* data){
                         length = 2;
                     }
                     NewCapsule(body,geom,radius,length-radius*2,density,data);
+                    //cout << "- build capsule\n";
                 }
 
 
@@ -306,6 +339,7 @@ PhysicsGroup* PhysicsWorld::BuildPhysicsGroup(VarMap* groupSettings,void* data){
             if(body){
                 if(props.IsSet("position")){
                     double3 pos = props.get<double3>("position");
+                    //cout << "set position for body " << groupNames[i] << " at " << pos.x << "," << pos.y << "," << pos.z << endl;
                     dBodySetPosition(body,pos.x,pos.y,pos.z);
                 }
 
@@ -320,9 +354,45 @@ PhysicsGroup* PhysicsWorld::BuildPhysicsGroup(VarMap* groupSettings,void* data){
             if(geom){
                 pGroup->geom.push(geom,groupNames[i]);
             }
-
-
         }
+
+
+        //build any joints
+        if(containsJoints){
+            cout << "contains joints\n";
+            VarMap jointsGroup = groupSettings->GetGroup("joints");
+            groupNames = jointsGroup.GroupNames();
+            for(int i=0;i<groupNames.GetCount();i++){
+                cout << " - build joint " << groupNames[i] << endl;
+                VarMap jProps = jointsGroup.GetGroup(groupNames[i]);
+                string type = "ball-and-socket";
+                if(jProps.IsSet("type")){
+                    type = jProps.get<string>("type");
+                }
+                dJointID joint;
+                dBodyID body1 = pGroup->body[jProps.get<string>("body1")];
+                dBodyID body2 = pGroup->body[jProps.get<string>("body2")];
+                cout << "   - type : " << type << endl;
+                if(type == "ball-and-socket"){
+                    double3 anchor = jProps.get<double3>("anchor");
+                    NewBallAndSocketJoint(joint,body1,body2,anchor);
+                    pGroup->joint.push(joint,groupNames[i]);
+                } else if(type == "universal"){
+                    double3 anchor = jProps.get<double3>("anchor");
+                    NewUniversalJoint(joint,body1,body2,anchor);
+                    dJointSetUniversalAxis1(joint, 1, 0, 0);
+                    dJointSetUniversalAxis2(joint, 0, 0, 1);
+                    pGroup->joint.push(joint,groupNames[i]);
+
+                } else {
+                    cout << "   - [not implimented]\n";
+                }
+
+            }
+        }
+
+
+
 
         return pGroup;
     }

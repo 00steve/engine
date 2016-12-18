@@ -75,6 +75,10 @@ public:
     that was argued.*/
     static void NewCapsule(dBodyID &body,dGeomID &geom,double height,double radius,double density, void* data);
 
+
+    static void NewUniversalJoint(dJointID &joint,dBodyID &body1,dBodyID &body2,double3 anchor);
+    static void NewBallAndSocketJoint(dJointID &joint,dBodyID &body1,dBodyID &body2,double3 anchor);
+
     /**\brief Given a VarMap of different objects, which should be arranged as groups with their
     specific properties, generates physics objects and returns them in each group, with property names
     such as body and geom.

@@ -6,6 +6,12 @@ Engine::Engine()
 }
 
 Engine::~Engine(){
+
+    if(engineControlStack.GetCount()){
+        cout << "delete engine control\n";
+        delete engineControlStack.Pop();
+    }
+
 	glfwTerminate();
 	cout << "Kill engine\n";
 }

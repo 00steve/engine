@@ -11,6 +11,7 @@ List<NodeRequest> Node::globalRequests = List<NodeRequest>();
 AssetLibrary Node::assetLibrary;
 
 
+void Node::OnSetParent(){}
 
 Node* Node::Child(Node* newChild){
 	//make sure that the new child being added is not already the
@@ -20,6 +21,7 @@ Node* Node::Child(Node* newChild){
 	if(children.PushIfNew(newChild)){
 		Link(newChild);
 		newChild->parent = this;
+        newChild->OnSetParent();
 	}
 	return newChild;
 }
@@ -69,13 +71,19 @@ Node::Node():
 
 
 Node::~Node(){
+    cout << "node\n";
 	while(references.GetCount()){
 		Unlink(references[0]);
+	}
+	while(children.GetCount()){
+        cout << " - delete child\n";
+        delete children.Pop();
 	}
 }
 
 
 void Node::OnGlobalRequest(Node* globalNodeRef,string name){
+    //do nothing, currently
 }
 
 
@@ -131,6 +139,9 @@ Node* Node::Parent(Node* newParent){
 		Link(newParent);
 		newParent->children.PushIfNew(this);
 	}
+	//call this so any inheriting classes can have their own custom
+	//callback
+	OnSetParent();
 	//no matter what, set the new parent as the current parent. If
 	//it is the same node, nothing will change. If it is a new node,
 	//the new node will be set. If it is NULL, the parent will be set
@@ -140,6 +151,7 @@ Node* Node::Parent(Node* newParent){
 Node* Node::Parent(){
 	return parent;
 }
+
 
 
 void Node::CopyGlobalRefsTo(Node* node){

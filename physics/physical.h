@@ -73,6 +73,14 @@ public:
 
     ~Physical();
 
+    /**\brief returns the physics world object, used for creating
+    new physics bodies.
+
+    This will return the nearest parent that inherits from the physics
+    world class. This could possibly a very costly function, so should
+    only be used
+    **/
+
     /**\brief sets the contact parameters to use for contact
     points between this body and other bodies in the physics
     engine.**/
@@ -201,6 +209,8 @@ public:
 	virtual bool DefaultEnabled();
 
 	virtual void DefaultEnabled(const bool enabled);
+
+
 
 
 };

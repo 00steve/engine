@@ -166,8 +166,19 @@ protected:
 
 	void ReceiveMessage(NodeMessage message);
 
+	/**\brief Loops through and calls the HandleMessage for each message in the
+	messageQueue.
+
+	This is called automatically in the Update() function. If you do not override the
+	default Node::Update() function, you do not need to worry about calling this.**/
 	void HandleMessages();
 
+	/**\brief Check to see if a specific message contains a message_code that has any
+	meaning to this class.
+
+	If the message is used, true should be returned, otherwise the object should give
+	its parent classes a chance to handle it by returning Node::HandleMessage(message),
+	or whatever parent the implementing class directly inherits from.**/
 	virtual bool HandleMessage(NodeMessage message);
 
 	/**\brief Set a reference to the parent of the current node.
@@ -223,8 +234,25 @@ protected:
     virtual void OnSetSettings();
 
 
+    /**\brief Called when the parent of a node is set.
+
+    This can be overwritten by any inheriting class to do things that you know need
+    to be done when a parent is set. It does nothing by default. It is only called when
+    a child is added through the Child(the_child) function or the childs OnSetParent()
+    function.**/
+    virtual void OnSetParent();
+
 
     Node* Load(string settingsName,VarMap settings);
+
+
+    template <class T>
+    T* Closest(){
+        if(!parent) return NULL;
+        T* castParent = dynamic_cast<T*>(&parent);
+        if(castParent) return castParent;
+        return parent->Closest<T>();
+    }
 
 
 

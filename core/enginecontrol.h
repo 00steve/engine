@@ -12,6 +12,7 @@ protected:
     virtual void OnGlobalRequest(Node* globalNodeRef,string name);
 
 public:
+    ~EngineControl();
 
 	virtual void Update();
 
